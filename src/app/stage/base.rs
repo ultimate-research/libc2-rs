@@ -757,11 +757,17 @@ pub struct StageFinalNessParam {
     pub max_angle: f32,
 }
 
+/// The set of parameters corresponding to Bowser's Final Smash.
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalKoopaParam {
-    pub x286f4d767b: f32,
+    // TODO. Assumes the value of `Hash40(0x286F4D767B)`.
+    pub _0: f32,
+
+    /// The uniform scale of Giga Bowser.
     pub scale: f32,
+
+    /// The displacement of Giga Bowser's target position.
     pub offset: Vector3f,
 }
 
