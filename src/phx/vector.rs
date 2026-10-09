@@ -1,10 +1,10 @@
-use core::{fmt, ops};
+use core::{fmt, ops, simd};
 
 /// A two-dimensional vector type.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
-#[repr(C, align(8))]
+#[repr(transparent)]
 pub struct Vector2f {
-    inner: [f32; 2],
+    inner: simd::f32x2,
 }
 
 impl Vector2f {
@@ -22,35 +22,37 @@ impl Vector2f {
 
     /// Creates a new `Vector2f`.
     pub const fn new(x: f32, y: f32) -> Self {
-        Self { inner: [x, y] }
+        Self {
+            inner: simd::f32x2::from_array([x, y]),
+        }
     }
 
     /// Returns a reference to the component along the x-axis.
-    pub const fn x(&self) -> &f32 {
+    pub fn x(&self) -> &f32 {
         &self.inner[0]
     }
 
     /// Returns a mutable reference to the component along the x-axis.
-    pub const fn x_mut(&mut self) -> &mut f32 {
+    pub fn x_mut(&mut self) -> &mut f32 {
         &mut self.inner[0]
     }
 
     /// Returns a reference to the component along the y-axis.
-    pub const fn y(&self) -> &f32 {
+    pub fn y(&self) -> &f32 {
         &self.inner[1]
     }
 
     /// Returns a mutable reference to the component along the y-axis.
-    pub const fn y_mut(&mut self) -> &mut f32 {
+    pub fn y_mut(&mut self) -> &mut f32 {
         &mut self.inner[1]
     }
 
     /// Computes the normalization of `self`.
     pub fn normalize(self) -> Self {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             self / length
         } else {
@@ -60,17 +62,17 @@ impl Vector2f {
 
     /// Normalizes `self`, returning `true` if successful.
     pub fn normalize_mut(&mut self) -> bool {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             *self /= length;
         } else {
             *self = Self::ZERO;
         }
 
-        length_squared != 0.0
+        length_square != 0.0
     }
 
     /// Computes the dot product of two vectors.
@@ -85,32 +87,22 @@ impl Vector2f {
 
     /// Computes the length of `self`.
     pub fn length(&self) -> f32 {
-        self.length_squared().sqrt()
+        self.length_square().sqrt()
     }
 
     /// Computes the squared length of `self`.
-    pub fn length_squared(&self) -> f32 {
+    pub fn length_square(&self) -> f32 {
         self.x() * self.x() + self.y() * self.y()
     }
 
     /// Computes the distance between two points.
     pub fn distance(a: Self, b: Self) -> f32 {
-        Self::distance_squared(a, b).sqrt()
+        Self::distance_square(a, b).sqrt()
     }
 
     /// Computes the squared distance between two points.
-    pub fn distance_squared(a: Self, b: Self) -> f32 {
-        (a - b).length_squared()
-    }
-
-    /// Returns a vector consisting of the minimum value of each component of two vectors.
-    pub const fn min(&self, other: &Self) -> Self {
-        Self::new(self.x().min(*other.x()), self.y().min(*other.y()))
-    }
-
-    /// Returns a vector consisting of the maximum value of each component of two vectors.
-    pub const fn max(&self, other: &Self) -> Self {
-        Self::new(self.x().max(*other.x()), self.y().max(*other.y()))
+    pub fn distance_square(a: Self, b: Self) -> f32 {
+        (a - b).length_square()
     }
 
     /// Computes the result of linearly interpolating between two points.
@@ -195,9 +187,9 @@ impl ops::DivAssign<f32> for Vector2f {
 
 /// A three-dimensional vector type.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
-#[repr(C, align(16))]
+#[repr(transparent)]
 pub struct Vector3f {
-    inner: [f32; 3],
+    inner: simd::f32x4,
 }
 
 impl Vector3f {
@@ -218,45 +210,47 @@ impl Vector3f {
 
     /// Creates a new `Vector3f`.
     pub const fn new(x: f32, y: f32, z: f32) -> Self {
-        Self { inner: [x, y, z] }
+        Self {
+            inner: simd::f32x4::from_array([x, y, z, 0.0]),
+        }
     }
 
     /// Returns a reference to the component along the x-axis.
-    pub const fn x(&self) -> &f32 {
+    pub fn x(&self) -> &f32 {
         &self.inner[0]
     }
 
     /// Returns a mutable reference to the component along the x-axis.
-    pub const fn x_mut(&mut self) -> &mut f32 {
+    pub fn x_mut(&mut self) -> &mut f32 {
         &mut self.inner[0]
     }
 
     /// Returns a reference to the component along the y-axis.
-    pub const fn y(&self) -> &f32 {
+    pub fn y(&self) -> &f32 {
         &self.inner[1]
     }
 
     /// Returns a mutable reference to the component along the y-axis.
-    pub const fn y_mut(&mut self) -> &mut f32 {
+    pub fn y_mut(&mut self) -> &mut f32 {
         &mut self.inner[1]
     }
 
     /// Returns a reference to the component along the z-axis.
-    pub const fn z(&self) -> &f32 {
+    pub fn z(&self) -> &f32 {
         &self.inner[2]
     }
 
     /// Returns a mutable reference to the component along the z-axis.
-    pub const fn z_mut(&mut self) -> &mut f32 {
+    pub fn z_mut(&mut self) -> &mut f32 {
         &mut self.inner[2]
     }
 
     /// Computes the normalization of `self`.
     pub fn normalize(self) -> Self {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             self / length
         } else {
@@ -266,17 +260,17 @@ impl Vector3f {
 
     /// Normalizes `self`, returning `true` if successful.
     pub fn normalize_mut(&mut self) -> bool {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             *self /= length;
         } else {
             *self = Self::ZERO;
         }
 
-        length_squared != 0.0
+        length_square != 0.0
     }
 
     /// Computes the dot product of two vectors.
@@ -295,40 +289,22 @@ impl Vector3f {
 
     /// Computes the length of `self`.
     pub fn length(&self) -> f32 {
-        self.length_squared().sqrt()
+        self.length_square().sqrt()
     }
 
     /// Computes the squared length of `self`.
-    pub fn length_squared(&self) -> f32 {
+    pub fn length_square(&self) -> f32 {
         self.x() * self.x() + self.y() * self.y() + self.z() * self.z()
     }
 
     /// Computes the distance between two points.
     pub fn distance(a: Self, b: Self) -> f32 {
-        Self::distance_squared(a, b).sqrt()
+        Self::distance_square(a, b).sqrt()
     }
 
     /// Computes the squared distance between two points.
-    pub fn distance_squared(a: Self, b: Self) -> f32 {
-        (a - b).length_squared()
-    }
-
-    /// Returns a vector consisting of the minimum value of each component of two vectors.
-    pub const fn min(&self, other: &Self) -> Self {
-        Self::new(
-            self.x().min(*other.x()),
-            self.y().min(*other.y()),
-            self.z().min(*other.z()),
-        )
-    }
-
-    /// Returns a vector consisting of the maximum value of each component of two vectors.
-    pub const fn max(&self, other: &Self) -> Self {
-        Self::new(
-            self.x().max(*other.x()),
-            self.y().max(*other.y()),
-            self.z().max(*other.z()),
-        )
+    pub fn distance_square(a: Self, b: Self) -> f32 {
+        (a - b).length_square()
     }
 
     /// Computes the result of linearly interpolating between two points.
@@ -425,9 +401,9 @@ impl ops::DivAssign<f32> for Vector3f {
 
 /// A four-dimensional vector type.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
-#[repr(C, align(16))]
+#[repr(transparent)]
 pub struct Vector4f {
-    inner: [f32; 4],
+    inner: simd::f32x4,
 }
 
 impl Vector4f {
@@ -452,56 +428,56 @@ impl Vector4f {
     /// Creates a new `Vector4f`.
     pub const fn new(x: f32, y: f32, z: f32, w: f32) -> Self {
         Self {
-            inner: [x, y, z, w],
+            inner: simd::f32x4::from_array([x, y, z, w]),
         }
     }
 
     /// Returns a reference to the component along the x-axis.
-    pub const fn x(&self) -> &f32 {
+    pub fn x(&self) -> &f32 {
         &self.inner[0]
     }
 
     /// Returns a mutable reference to the component along the x-axis.
-    pub const fn x_mut(&mut self) -> &mut f32 {
+    pub fn x_mut(&mut self) -> &mut f32 {
         &mut self.inner[0]
     }
 
     /// Returns a reference to the component along the y-axis.
-    pub const fn y(&self) -> &f32 {
+    pub fn y(&self) -> &f32 {
         &self.inner[1]
     }
 
     /// Returns a mutable reference to the component along the y-axis.
-    pub const fn y_mut(&mut self) -> &mut f32 {
+    pub fn y_mut(&mut self) -> &mut f32 {
         &mut self.inner[1]
     }
 
     /// Returns a reference to the component along the z-axis.
-    pub const fn z(&self) -> &f32 {
+    pub fn z(&self) -> &f32 {
         &self.inner[2]
     }
 
     /// Returns a mutable reference to the component along the z-axis.
-    pub const fn z_mut(&mut self) -> &mut f32 {
+    pub fn z_mut(&mut self) -> &mut f32 {
         &mut self.inner[2]
     }
 
     /// Returns a reference to the component along the w-axis.
-    pub const fn w(&self) -> &f32 {
+    pub fn w(&self) -> &f32 {
         &self.inner[3]
     }
 
     /// Returns a mutable reference to the component along the w-axis.
-    pub const fn w_mut(&mut self) -> &mut f32 {
+    pub fn w_mut(&mut self) -> &mut f32 {
         &mut self.inner[3]
     }
 
     /// Computes the normalization of `self`.
     pub fn normalize(self) -> Self {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             self / length
         } else {
@@ -511,17 +487,17 @@ impl Vector4f {
 
     /// Normalizes `self`, returning `true` if successful.
     pub fn normalize_mut(&mut self) -> bool {
-        let length_squared = self.length_squared();
+        let length_square = self.length_square();
 
-        if length_squared > 0.0 {
-            let length = length_squared.sqrt();
+        if length_square > 0.0 {
+            let length = length_square.sqrt();
 
             *self /= length;
         } else {
             *self = Self::ZERO;
         }
 
-        length_squared != 0.0
+        length_square != 0.0
     }
 
     /// Computes the dot product of two vectors.
@@ -531,42 +507,22 @@ impl Vector4f {
 
     /// Computes the length of `self`.
     pub fn length(&self) -> f32 {
-        self.length_squared().sqrt()
+        self.length_square().sqrt()
     }
 
     /// Computes the squared length of `self`.
-    pub fn length_squared(&self) -> f32 {
+    pub fn length_square(&self) -> f32 {
         self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w()
     }
 
     /// Computes the distance between two points.
     pub fn distance(a: Self, b: Self) -> f32 {
-        Self::distance_squared(a, b).sqrt()
+        Self::distance_square(a, b).sqrt()
     }
 
     /// Computes the squared distance between two points.
-    pub fn distance_squared(a: Self, b: Self) -> f32 {
-        (a - b).length_squared()
-    }
-
-    /// Returns a vector consisting of the minimum value of each component of two vectors.
-    pub fn min(a: &Self, b: &Self) -> Self {
-        Self::new(
-            a.x().min(*b.x()),
-            a.y().min(*b.y()),
-            a.z().min(*b.z()),
-            a.w().min(*b.w()),
-        )
-    }
-
-    /// Returns a vector consisting of the maximum value of each component of two vectors.
-    pub fn max(a: &Self, b: &Self) -> Self {
-        Self::new(
-            a.x().max(*b.x()),
-            a.y().max(*b.y()),
-            a.z().max(*b.z()),
-            a.w().max(*b.w()),
-        )
+    pub fn distance_square(a: Self, b: Self) -> f32 {
+        (a - b).length_square()
     }
 
     /// Computes the result of linearly interpolating between two points.
