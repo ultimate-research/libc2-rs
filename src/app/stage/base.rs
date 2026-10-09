@@ -740,12 +740,20 @@ pub enum StageKirifudaKind {
     PikminExtra2,
 }
 
+/// The set of parameters corresponding to Ness's Final Smash.
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalNessParam {
+    // TODO
     pub length_scale: f32,
+
+    // TODO
     pub width_scale: f32,
+
+    /// The maximum angular velocity of the emission angle influenced by left or right input, in degrees.
     pub angular_velocity: f32,
+
+    /// The maximum symmetric emission angle influenced by left or right input, in degrees.
     pub max_angle: f32,
 }
 
