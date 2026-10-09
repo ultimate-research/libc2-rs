@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use strum::{EnumCount, EnumString};
 
-/// A numeric identifier for a stage at-large
+/// A numeric umbrella identifier for a stage.
 #[allow(non_camel_case_types)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(

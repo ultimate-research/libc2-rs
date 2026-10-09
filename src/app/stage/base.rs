@@ -1,13 +1,16 @@
 use core::{
-    ffi::c_char,
+    ffi::{c_char, c_void},
     mem::{self, MaybeUninit},
     ops,
 };
 
 use crate::{
-    app::{GlobalStageParameter, StageDynamicObject, StageGroundCrackParam, StageID},
+    app::{
+        GlobalStageParameter, StageDynamicObject, StageGroundCrackParam, StageID, grcol::AttrType,
+    },
     cpp,
-    phx::{Hash40, Vector3f},
+    lib::Rect,
+    phx::{Hash40, Vector2f, Vector3f},
 };
 
 #[cfg(feature = "impl")]
@@ -56,7 +59,7 @@ impl StageBase {
         }
     }
 
-    /// Returns the working stage identifier.
+    /// Returns a reference to the working stage identifier.
     pub const fn stage_id(&self) -> &StageID {
         self.create_param.global_stage_parameter.stage_id()
     }
@@ -83,124 +86,363 @@ impl StageBase {
 
 #[repr(C)]
 struct StageBaseVtable {
+    /// Returns the working stage identifier.
     pub get_stage_id: extern "C" fn(*const StageBase) -> StageID,
+
+    /// Returns the hashed umbrella name of the working stage.
     pub get_stage_place_name: extern "C" fn(*const StageBase) -> Hash40,
-    _10: extern "C" fn(*const StageBase) -> bool,
-    pub get_delta_position: extern "C" fn(*const StageBase) -> Vector3f,
-    _20: extern "C" fn(*const StageBase) -> i32,
+
+    // TODO
+    pub _10: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns the working scrolling velocity of the stage.
+    pub get_stage_position_delta: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the number of fighter entry positions.
+    pub get_fighter_start_position_num: extern "C" fn(*const StageBase) -> i32,
+
+    /// Returns the entry position for a fighter at the given index.
     pub get_fighter_start_position: extern "C" fn(*const StageBase, i32) -> Vector3f,
-    _30: extern "C" fn(*const StageBase) -> Vector3f,
-    _38: extern "C" fn(*const StageBase) -> i32,
-    _40: extern "C" fn(*const StageBase) -> Vector3f,
+
+    // TODO. Unused?
+    pub _30: extern "C" fn(*const StageBase) -> Vector3f,
+
+    // TODO. Unused?
+    pub _38: extern "C" fn(*const StageBase) -> i32,
+
+    // TODO. Unused?
+    pub _40: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the number of recovery platform target positions.
     pub get_fighter_restart_position_num: extern "C" fn(*const StageBase) -> usize,
-    pub get_fighter_restart_position: extern "C" fn(*const StageBase, u32) -> Vector3f,
-    _58: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the target position for a recovery platform at the given index.
+    pub get_fighter_restart_position: extern "C" fn(*const StageBase, i32) -> Vector3f,
+
+    /// Returns the working scrolling velocity for a recovery platform.
+    pub get_fighter_restart_position_delta: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the number of Pokémon Trainer initial positions.
     pub get_ptrainer_start_position_num: extern "C" fn(*const StageBase) -> i32,
+
+    /// Returns the initial position for a Pokémon Trainer at the given index.
     pub get_ptrainer_start_position: extern "C" fn(*const StageBase, i32) -> Vector3f,
+
+    /// Returns `true` if a Level Data-driven Final Smash locator contains a valid position.
     pub exists_kirifuda_position: extern "C" fn(*const StageBase, StageKirifudaKind) -> bool,
+
+    /// Returns the target position of a Level Data-driven Final Smash locator.
     pub get_kirifuda_position: extern "C" fn(*const StageBase, StageKirifudaKind) -> Vector3f,
+
+    /// Returns the target camera angle of a Level Data-driven Final Smash around the x-axis.
     pub get_kirifuda_angle: extern "C" fn(*const StageBase, StageKirifudaKind) -> f32,
+
+    /// Returns the set of parameters corresponding to Ness's Final Smash.
     pub get_final_ness_param: extern "C" fn(*const StageBase) -> StageFinalNessParam,
+
+    /// Returns the set of parameters corresponding to Bowser's Final Smash.
     pub get_final_koopa_param: extern "C" fn(*const StageBase) -> StageFinalKoopaParam,
-    _98: usize,
-    _a0: usize,
-    _a8: usize,
-    _b0: usize,
+
+    /// Returns the set of parameters corresponding to the Ice Climbers' Final Smash.
+    pub get_final_iceclimber_param: extern "C" fn(*const StageBase) -> StageFinalIceclimberParam,
+
+    // TODO
+    pub _a0: extern "C" fn(*const StageBase, *const c_void, &Vector3f, &Vector3f),
+
+    // TODO
+    pub _a8: extern "C" fn(*const StageBase, i32, &Vector3f, &Vector3f),
+
+    // TODO
+    pub _b0: extern "C" fn(*const StageBase),
+
+    /// Returns the set of parameters corresponding to constant wind.
     pub get_wind_param: extern "C" fn(*const StageBase) -> StageWindParam,
+
+    /// Returns the position of an effect upon ground collision.
     pub get_ground_effect_position: extern "C" fn(*const StageBase, &Vector3f) -> Vector3f,
-    pub get_ground_effect_vector: extern "C" fn(*const StageBase, &Vector3f) -> Vector3f,
-    _d0: usize,
-    _d8: usize,
-    _e0: usize,
+
+    /// Returns the unit normal vector of an effect upon ground collision.
+    pub get_ground_effect_normal: extern "C" fn(*const StageBase, &Vector3f) -> Vector3f,
+
+    /// Returns `true` if Bowser's Final Smash form should appear silhouetted behind stage models.
+    pub is_final_koopa_silhouette: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns `true` if items can appear.
+    ///
+    /// Unlike other adjacent item functions which return a `bool`, when this function returns `false`,
+    /// it will be called every subsequent frame until it returns `true`.
+    pub get_item_drop_status: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns a coefficient to scale the interval of time when an item can randomly appear by.
+    pub get_item_drop_interval_rate: extern "C" fn(*const StageBase, i32) -> f32,
+
+    /// Returns `true` if the working `StageItemPopupInfo` instance exists.
     pub can_get_item_popup_info: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns the number of enabled `StageItemPopupRegion` instances.
     pub get_item_popup_region_num: extern "C" fn(*const StageBase) -> u32,
-    _f8: usize,
-    _100: usize,
+
+    /// Returns a raw pointer to the enabled `StageItemPopupRegion` at the given index,
+    /// or a null raw pointer if out of bounds.
+    pub get_item_popup_region: extern "C" fn(*const StageBase, i32) -> *const c_void,
+
+    /// Returns `true` if a position for a randomly-appearing item was computed.
+    pub get_item_popup_position: extern "C" fn(*const StageBase, f32, &mut Vector3f) -> bool,
+
+    /// Returns the uniform scale of Nightmare.
     pub get_nightmare_scale: extern "C" fn(*const StageBase) -> f32,
+
+    /// Returns the position of Nightmare.
     pub get_nightmare_position: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the target background position of Andross.
     pub get_andross_position: extern "C" fn(*const StageBase) -> Vector3f,
+
+    /// Returns the target foreground position of Devil.
     pub get_devil_position: extern "C" fn(*const StageBase) -> Vector3f,
-    pub get_dragoon_camera_rectangle: usize,
-    pub get_smashball_rect: usize,
-    pub get_camera_param: usize,
-    pub get_camera_range: usize,
-    pub get_dead_range: usize,
-    _150: usize,
-    _158: usize,
+
+    // TODO
+    pub get_dragoon_camera_rectangle: extern "C" fn(*const StageBase) -> Rect,
+
+    // TODO
+    pub get_smashball_rect: extern "C" fn(*const StageBase) -> Rect,
+
+    // TODO
+    pub get_camera_param: extern "C" fn(*const StageBase) -> *const c_void,
+
+    /// Returns a pointer to the working camera boundary.
+    pub get_camera_range: extern "C" fn(*const StageBase) -> *const Rect,
+
+    /// Returns a pointer to the working blast zone.
+    pub get_dead_range: extern "C" fn(*const StageBase) -> *const Rect,
+
+    // TODO. Related to the camera. Executes once per frame during a performance effect. `Tomodachi` and `BalloonFight` both return `true`.
+    pub _150: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO. Related to the camera. Executes once per frame. Always returns `false`.
+    pub _158: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns the minimum distance from the pivot the camera can zoom in towards using camera controls.
     pub get_pause_camera_min_distance: extern "C" fn(*const StageBase) -> f32,
+
+    /// Returns the maximum distance from the pivot the camera can zoom out towards using camera controls.
     pub get_pause_camera_max_distance: extern "C" fn(*const StageBase) -> f32,
+
+    /// Returns the minimum distance from the pivot the camera can zoom in towards in Training.
     pub get_training_camera_min_distance: extern "C" fn(*const StageBase) -> f32,
-    _178: usize,
+
+    // TODO. Executes upon the first frame of battle entry.
+    pub _178: extern "C" fn(*const StageBase) -> (u64, f32),
+
+    /// Returns `true` if screen KOs can occur.
     pub can_dead_front: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns `true` if star KOs can occur.
     pub can_dead_back: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns the distance a `BattleObject` can be pushed into the background upon being jostled.
     pub get_valid_range_z: extern "C" fn(*const StageBase) -> f32,
+
+    // TODO
     pub is_horizontal_reverse_enabled: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO
     pub is_vertical_reverse_enabled: extern "C" fn(*const StageBase) -> bool,
-    _1a8: usize,
-    _1b0: usize,
-    _1b8: usize,
-    _1c0: usize,
-    _1c8: usize,
-    _1d0: usize,
-    _1d8: usize,
-    _1e0: usize,
-    _1e8: usize,
-    _1f0: usize,
-    _1f8: usize,
-    _200: usize,
-    pub get_final_color: extern "C" fn(*const StageBase) -> *const StageFinalColor,
-    pub get_charge_final_color: extern "C" fn(*const StageBase) -> *const StageFinalColor,
-    _218: usize,
-    _220: usize,
-    _228: usize,
-    _230: usize,
-    _238: usize,
-    _240: usize,
-    _248: usize,
-    _250: usize,
-    _258: usize,
-    _260: usize,
-    _268: usize,
+
+    // TODO
+    pub _1a8: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _1b0: extern "C" fn(*mut StageBase),
+
+    // TODO. Related to Smash Taunts.
+    pub _1b8: extern "C" fn(*const StageBase) -> bool,
+
+    /// Returns `true` if a Smash Taunt can be activated at this time.
+    ///
+    /// If this function returns `false`, a Smash Taunt can still be activated at a later time.
+    pub is_start_appeal_timing: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO. Executes after a Smash Taunt has successfully been performed.
+    pub _1c8: extern "C" fn(*mut StageBase) -> bool,
+
+    /// Assigns the `FighterKind` of the Smash Taunt's subject fighter.
+    pub set_appeal_subject_fighter_kind: extern "C" fn(*mut StageBase, i32),
+
+    // TODO. Executes to force stop the Smash Taunt?
+    pub _1d8: extern "C" fn(*const StageBase),
+
+    // TODO. Related to Smash Taunts.
+    pub _1e0: extern "C" fn(*const StageBase),
+
+    // TODO. Related to Smash Taunts. Only called for `MG_Shadowmoses` and `Icarus_Angeland`.
+    pub _1e8: extern "C" fn(*mut StageBase, u32),
+
+    // TODO
+    pub _1f0: extern "C" fn(*const StageBase) -> *const c_void,
+
+    /// Returns a pointer to the set of parameters corresponding to the given material's attributes upon collision.
+    pub get_ground_attr_param_set:
+        extern "C" fn(*const StageBase, AttrType) -> *const StageGroundAttrParamSet,
+
+    // TODO
+    pub get_any_damage_floor_data: extern "C" fn(*const StageBase, u32, &mut c_void) -> bool,
+
+    /// Returns a raw pointer to the set of parameters corresponding to color correction upon
+    /// readying a Final Smash, or a null raw pointer if not customized.
+    pub get_final_color_param: extern "C" fn(*const StageBase) -> *const StageFinalColorParam,
+
+    /// Returns a raw pointer to the set of parameters corresponding to color correction upon
+    /// readying a charged Final Smash, or a null raw pointer if not customized.
+    pub get_charge_final_color_param:
+        extern "C" fn(*const StageBase) -> *const StageFinalColorParam,
+
+    // TODO
+    pub set_vision: extern "C" fn(*mut StageBase, StageVisionMessageKind),
+
+    // TODO
+    pub _220: extern "C" fn(*const StageBase, u32) -> i32,
+
+    // TODO
+    pub _228: extern "C" fn(*mut StageBase, u32, i32),
+
+    // TODO
+    pub _230: extern "C" fn(*const StageBase, u32) -> f32,
+
+    // TODO
+    pub _238: extern "C" fn(*mut StageBase, u32, f32),
+
+    // TODO
+    pub _240: extern "C" fn(*const StageBase, u32) -> Vector3f,
+
+    // TODO
+    pub _248: extern "C" fn(*mut StageBase, u32, &Vector3f),
+
+    _250: usize, // Never overriden, possibly unused.
+
+    // TODO
+    pub _258: extern "C" fn(*mut StageBase, u32, *mut c_void),
+
+    // TODO
+    pub _260: extern "C" fn(*const StageBase) -> *const c_void,
+
+    // TODO
+    pub _268: extern "C" fn(*const StageBase),
+
+    /// Returns the distance of the near-clipping plane from the camera.
     pub get_near_clip: extern "C" fn(*const StageBase) -> f32,
+
+    /// Returns the distance of the far-clipping plane from the camera.
     pub get_far_clip: extern "C" fn(*const StageBase) -> f32,
-    _280: usize,
-    _288: usize,
-    _290: usize,
+
+    // TODO
+    pub _280: extern "C" fn(*const StageBase) -> Vector3f,
+
+    // TODO. Related to stage scrolling.
+    pub _288: extern "C" fn(*const StageBase) -> f32,
+
+    // TODO. Executes once per frame when mining the ground with Steve's neutral special move.
+    pub _290: extern "C" fn(*const StageBase, i32, i32, i32) -> f32,
+
+    // TODO
     pub get_other_ground_crack_param:
-        extern "C" fn(*const StageBase, *const Vector3f, i32, *mut StageGroundCrackParam),
+        extern "C" fn(*const StageBase, &Vector3f, i32, &mut StageGroundCrackParam),
+
     _2a0: [usize; 52], // __cxa_deleted_virtual
+
+    /// Frees the resources that may have been acquired.
     pub destroy: extern "C" fn(*mut StageBase),
+
+    /// Deallocates the memory reserved for `this`.
     pub delete: extern "C" fn(*mut StageBase),
-    _450: usize,
-    _458: usize,
+
+    // TODO
+    pub _450: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _458: extern "C" fn(*mut StageBase),
+
+    // TODO
     pub create_related_move_floor:
         extern "C" fn(*const StageBase, *const c_char, *const StageDynamicObject) -> [u8; 17],
-    _468: usize,
-    _470: usize,
-    _478: usize,
-    _480: usize,
-    _488: usize,
-    _490: usize,
-    _498: usize,
-    _4a0: usize,
-    _4a8: usize,
+
+    // TODO
+    pub _468: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _470: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _478: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _480: extern "C" fn(*const StageBase) -> Rect,
+
+    // TODO
+    pub _488: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO
+    pub _490: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO
+    pub _498: extern "C" fn(*const StageBase) -> f32,
+
+    // TODO
+    pub _4a0: extern "C" fn(*const StageBase) -> bool,
+
+    // TODO
+    pub _4a8: extern "C" fn(*const StageBase, *mut c_void) -> bool,
+
+    // TODO
     pub create_level_data: extern "C" fn(*const StageBase) -> *mut StageLevelData,
-    _4b8: usize,
-    _4c0: usize,
-    _4c8: usize,
+
+    // TODO
+    pub create_camera_controller: extern "C" fn(*const StageBase) -> *mut c_void,
+
+    // TODO
+    pub create_render_controller: extern "C" fn(*const StageBase) -> *mut c_void,
+
+    // TODO
+    pub _4c8: extern "C" fn(*const StageBase) -> *mut c_void,
+
+    // TODO
     pub create_draw_model_manager: extern "C" fn(*const StageBase) -> *mut StageDrawModelManager,
-    _4d8: usize,
-    _4e0: usize,
-    _4e8: usize,
-    _4f0: usize,
-    _4f8: usize,
+
+    // TODO
+    pub _4d8: extern "C" fn(*const StageBase) -> *mut c_void,
+
+    // TODO
+    pub _4e0: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _4e8: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _4f0: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _4f8: extern "C" fn(*mut StageBase),
+
+    // TODO
     pub pre_update: extern "C" fn(*mut StageBase, f32),
+
+    // TODO
     pub post_update: extern "C" fn(*mut StageBase, f32),
-    _510: usize,
-    _518: usize,
-    _520: usize,
+
+    // TODO
+    pub _510: extern "C" fn(*mut StageBase, f32),
+
+    // TODO
+    pub _518: extern "C" fn(*mut StageBase),
+
+    _520: [usize; 1], // __cxa_deleted_virtual
+
+    // TODO
     pub pre_update_gimmick: extern "C" fn(*mut StageBase, f32),
+
+    // TODO
     pub post_update_gimmick: extern "C" fn(*mut StageBase, f32),
+
     _538: usize,
     _540: usize,
     _548: usize,
@@ -211,16 +453,37 @@ struct StageBaseVtable {
     _570: usize,
     _578: usize,
     _580: usize,
-    _588: usize,
-    _590: usize,
-    _598: usize,
-    _5a0: usize,
-    _5a8: usize,
+
+    // TODO
+    pub get_damage_floor_data: extern "C" fn(*const StageBase, u32, &mut c_void) -> bool,
+
+    // TODO
+    pub get_death_floor_data: extern "C" fn(*const StageBase, u32, &mut c_void) -> bool,
+
+    // TODO
+    pub initialize_gimmick: extern "C" fn(*const StageBase, *mut c_void, *const StageDynamicObject),
+
+    // TODO
+    pub _5a0: extern "C" fn(*mut StageBase),
+
+    // TODO
+    pub _5a8: extern "C" fn(*mut StageBase, i32),
+
+    /// Executes upon each frame of the pre-match countdown.
     pub notify_event_info_ready: extern "C" fn(*mut StageBase, f32),
+
+    /// Executes upon the first frame of user input.
     pub notify_event_info_go: extern "C" fn(*mut StageBase, bool),
+
+    /// Executes upon the first frame of an effect background's appearance.
     pub notify_event_bg_effect_start: extern "C" fn(*mut StageBase),
+
+    /// Executes upon the first frame of an effect background's disappearance.
     pub notify_event_bg_effect_end: extern "C" fn(*mut StageBase),
+
+    /// Executes upon the first update frame after changing stages through the Stage Morph option.
     pub notify_event_transition: extern "C" fn(*mut StageBase),
+
     _5d8: [usize; 88], // __cxa_deleted_virtual
 }
 
@@ -289,9 +552,9 @@ impl StageCreateParam {
     }
 }
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 #[repr(C)]
-pub struct StageFinalColor {
+pub struct StageFinalColorParam {
     pub frame_character_1: i32,
     pub gain_r_character_1: f32,
     pub gain_g_character_1: f32,
@@ -342,7 +605,7 @@ pub enum StageKirifudaKind {
     PikminExtra2,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalNessParam {
     pub length_scale: f32,
@@ -351,7 +614,7 @@ pub struct StageFinalNessParam {
     pub max_angle: f32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalKoopaParam {
     pub x286f4d767b: f32,
@@ -359,7 +622,14 @@ pub struct StageFinalKoopaParam {
     pub offset: Vector3f,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
+#[repr(C)]
+pub struct StageFinalIceclimberParam {
+    pub offset: Vector2f,
+    pub scale: Vector2f,
+}
+
+#[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageWindParam {
     pub speed: f32,
@@ -367,6 +637,35 @@ pub struct StageWindParam {
     pub cycle: f32,
     pub amplitude: f32,
     pub rand_coord: u32,
+}
+
+#[derive(Debug)]
+#[repr(C)]
+pub enum StageVisionMessageKind {
+    None,
+    Ready,
+    Countdown5,
+    Countdown4,
+    Countdown3,
+    Countdown2,
+    Countdown1,
+    Go,
+    SuddenDeath,
+    TimeUp,
+    Complete,
+    Lose,
+    GameSet,
+    Unk13,
+    Unk14,
+    Defeated1P,
+    Defeated2P,
+    Defeated3P,
+    Defeated4P,
+    Defeated5P,
+    Defeated6P,
+    Defeated7P,
+    Defeated8P,
+    Victory,
 }
 
 #[cfg(test)]
