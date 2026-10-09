@@ -552,44 +552,116 @@ impl StageCreateParam {
     }
 }
 
+/// The set of parameters corresponding to color correction upon readying a Final Smash.
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalColorParam {
+    /// The frame duration of the interpolation towards the initial target character color.
     pub frame_character_1: i32,
+
+    /// The red component of the initial target character color scale.
     pub gain_r_character_1: f32,
+
+    /// The green component of the initial target character color scale.
     pub gain_g_character_1: f32,
+
+    /// The blue component of the initial target character color scale.
     pub gain_b_character_1: f32,
+
+    /// The red component of the initial target character color displacement.
     pub offset_r_character_1: f32,
+
+    /// The green component of the initial target character color displacement.
     pub offset_g_character_1: f32,
+
+    /// The blue component of the initial target character color displacement.
     pub offset_b_character_1: f32,
+
+    /// The saturation scale of the initial target character color.
     pub saturation_character_1: f32,
+
+    /// The contrast scale of the initial target character color.
     pub contrast_character_1: f32,
+
+    /// The frame duration of the interpolation towards the final target character color.
     pub frame_character_2: i32,
+
+    /// The red component of the final target character color scale.
     pub gain_r_character_2: f32,
+
+    /// The green component of the final target character color scale.
     pub gain_g_character_2: f32,
+
+    /// The blue component of the final target character color scale.
     pub gain_b_character_2: f32,
+
+    /// The red component of the final target character color displacement.
     pub offset_r_character_2: f32,
+
+    /// The green component of the final target character color displacement.
     pub offset_g_character_2: f32,
+
+    /// The blue component of the final target character color displacement.
     pub offset_b_character_2: f32,
+
+    /// The saturation scale of the final target character color.
     pub saturation_character_2: f32,
+
+    /// The contrast scale of the final target character color.
     pub contrast_character_2: f32,
+
+    /// The frame duration of the interpolation towards the initial target stage color.
     pub frame_ground_1: i32,
+
+    /// The red component of the initial target stage color scale.
     pub gain_r_ground_1: f32,
+
+    /// The green component of the initial target stage color scale.
     pub gain_g_ground_1: f32,
+
+    /// The blue component of the initial target stage color scale.
     pub gain_b_ground_1: f32,
+
+    /// The red component of the initial target stage color displacement.
     pub offset_r_ground_1: f32,
+
+    /// The green component of the initial target stage color displacement.
     pub offset_g_ground_1: f32,
+
+    /// The blue component of the initial target stage color displacement.
     pub offset_b_ground_1: f32,
+
+    /// The saturation scale of the initial target stage color.
     pub saturation_ground_1: f32,
+
+    /// The contrast scale of the initial target stage color.
     pub contrast_ground_1: f32,
+
+    /// The frame duration of the interpolation towards the final target stage color.
     pub frame_ground_2: i32,
+
+    /// The red component of the final target stage color scale.
     pub gain_r_ground_2: f32,
+
+    /// The green component of the final target stage color scale.
     pub gain_g_ground_2: f32,
+
+    /// The blue component of the final target stage color scale.
     pub gain_b_ground_2: f32,
+
+    /// The red component of the final target stage color displacement.
     pub offset_r_ground_2: f32,
+
+    /// The green component of the final target stage color displacement.
     pub offset_g_ground_2: f32,
+
+    /// The blue component of the final target stage color displacement.
     pub offset_b_ground_2: f32,
+
+    /// The saturation scale of the final target stage color.
     pub saturation_ground_2: f32,
+
+    /// The contrast scale of the final target stage color.
     pub contrast_ground_2: f32,
 }
 
