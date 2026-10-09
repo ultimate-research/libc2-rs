@@ -665,15 +665,78 @@ pub struct StageFinalColorParam {
     pub contrast_ground_2: f32,
 }
 
+/// A numeric identifier for a Level Data-driven Final Smash element locator.
 #[derive(Debug)]
 #[repr(C)]
 pub enum StageKirifudaKind {
+    /// Unused.
     Pit,
+
+    /// The target point for the ship in Olimar's Final Smash.
+    ///
+    /// If [`Ike2`] exists in the Level Data, [`PikminExtra1`] and [`PikminExtra2`] are used instead.
+    ///
+    /// [`Ike2`]: Self::Ike2
+    /// [`PikminExtra1`]: Self::PikminExtra1
+    /// [`PikminExtra2`]: Self::PikminExtra2
     Pikmin,
+
+    /// The primary target point for Ike's Final Smash.
+    ///
+    /// **Additionally used by**:
+    ///
+    /// - Meta Knight (Final Smash)
+    /// - Zero Suit Samus (Final Smash)
+    /// - Diddy Kong (Final Smash; right before the final hit)
+    /// - Lucario (Final Smash)
+    /// - Little Mac (Final Smash; unused?)
+    /// - Greninja (Final Smash)
+    /// - Mii Brawler (Final Smash)
+    /// - Robin (Final Smash)
+    /// - Cloud (Final Smash)
+    /// - Ridley (Final Smash; for the victims' drop point)
+    /// - Zoroark (after a successful initial attack)
     Ike1,
+
+    /// The secondary target point for Ike's Final Smash.
+    /// This point will be selected if it exists and is closer to the user.
+    ///
+    /// **Additionally used by**:
+    ///
+    /// - Meta Knight (Final Smash)
+    /// - Zero Suit Samus (Final Smash)
+    /// - Little Mac (Final Smash; unused?)
+    /// - Robin (Final Smash)
+    /// - Cloud (Final Smash)
+    /// - Ridley (Final Smash; for the victims' drop point)
+    /// - Zoroark (after a successful initial attack)
     Ike2,
+
+    /// The meteor emission point for Ness's Final Smash.
+    ///
+    /// **Additionally used by**:
+    ///
+    /// - Lucas (Final Smash)
     Ness,
+
+    /// A substitute target point over [`Pikmin`] for the ship in Olimar's Final Smash,
+    /// selected at random between this and [`PikminExtra2`].
+    ///
+    /// Shares an x-position with [`Ike1`] and both a y-position and z-position with [`Pikmin`].
+    ///
+    /// [`Ike1`]: Self::Ike1
+    /// [`Pikmin`]: Self::Pikmin
+    /// [`PikminExtra2`]: Self::PikminExtra2
     PikminExtra1,
+
+    /// A substitute target point over [`Pikmin`] for the ship in Olimar's Final Smash,
+    /// selected at random between this and [`PikminExtra1`].
+    ///
+    /// Shares an x-position with [`Ike2`] and both a y-position and z-position with [`Pikmin`].
+    ///
+    /// [`Ike2`]: Self::Ike2
+    /// [`Pikmin`]: Self::Pikmin
+    /// [`PikminExtra1`]: Self::PikminExtra1
     PikminExtra2,
 }
 
