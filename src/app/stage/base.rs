@@ -771,13 +771,18 @@ pub struct StageFinalKoopaParam {
     pub offset: Vector3f,
 }
 
+/// The set of parameters corresponding to the Ice Climbers' Final Smash.
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalIceclimberParam {
+    /// The displacement of the iceberg's target position.
     pub offset: Vector2f,
+
+    /// The non-uniform scale of the iceberg.
     pub scale: Vector2f,
 }
 
+/// The set of parameters corresponding to constant wind.
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageWindParam {
