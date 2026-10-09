@@ -793,32 +793,80 @@ pub struct StageWindParam {
     pub rand_coord: u32,
 }
 
+/// A numeric identifier for a battle event notification to display on a jumbotron.
 #[derive(Debug)]
 #[repr(C)]
 pub enum StageVisionMessageKind {
+    /// None.
     None,
+
+    /// "Ready"
     Ready,
+
+    /// "5"
     Countdown5,
+
+    /// "4"
     Countdown4,
+
+    /// "3"
     Countdown3,
+
+    /// "2"
     Countdown2,
+
+    /// "1"
     Countdown1,
+
+    /// "GO!"
     Go,
+
+    /// "SUDDEN DEATH"
     SuddenDeath,
+
+    /// "TIME!"
     TimeUp,
+
+    /// "COMPLETE"
     Complete,
+
+    /// "DEFEAT"
     Lose,
+
+    /// "GAME!"
     GameSet,
+
+    // TODO. Checked for in `Poke_Stadium2`.
     Unk13,
+
+    // TODO. Checked for in `Poke_Stadium2`.
     Unk14,
+
+    /// "Player 1 Defeated"
     Defeated1P,
+
+    /// "Player 2 Defeated"
     Defeated2P,
+
+    /// "Player 3 Defeated"
     Defeated3P,
+
+    /// "Player 4 Defeated"
     Defeated4P,
+
+    /// "Player 5 Defeated"
     Defeated5P,
+
+    /// "Player 6 Defeated"
     Defeated6P,
+
+    /// "Player 7 Defeated"
     Defeated7P,
+
+    /// "Player 8 Defeated"
     Defeated8P,
+
+    /// "VICTORY"
     Victory,
 }
 
