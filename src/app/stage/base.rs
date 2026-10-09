@@ -34,18 +34,21 @@ pub struct StageBase {
     pub ground_attr_default_param_set: StageGroundAttrParamSet,
     _180: [u8; 0x180],
     pub level_data: cpp::UniquePtr<StageLevelData>,
-    _308: usize,
+    pub camera_controller: cpp::UniquePtr<()>,
     pub draw_model_manager: cpp::UniquePtr<StageDrawModelManager>,
-    _318: usize,
-    _320: usize,
-    _328: usize,
-    _330: usize,
-    _338: usize,
+    _318: cpp::UniquePtr<()>,
+    _320: cpp::UniquePtr<()>,
+    _328: cpp::UniquePtr<()>,
+    _330: cpp::UniquePtr<()>,
+    pub sound_player: cpp::UniquePtr<()>,
     pub random: cpp::UniquePtr<StageRandom>,
-    _348: usize,
-    _350: usize,
-    _358: usize,
-    _360: [u8; 0x3D1],
+    _348: cpp::UniquePtr<()>,
+    _350: cpp::UniquePtr<()>,
+    _358: cpp::UniquePtr<()>,
+    pub total_frame: f64,
+    pub _368: f32,
+    pub _36c: f32,
+    _370: [u8; 0x3C1],
 }
 
 #[cfg(feature = "impl")]
@@ -883,8 +886,13 @@ mod tests {
         assert_eq!(offset_of!(StageBase, create_param), 0x8);
         assert_eq!(offset_of!(StageBase, ground_attr_default_param_set), 0xE0);
         assert_eq!(offset_of!(StageBase, level_data), 0x300);
+        assert_eq!(offset_of!(StageBase, camera_controller), 0x308);
         assert_eq!(offset_of!(StageBase, draw_model_manager), 0x310);
+        assert_eq!(offset_of!(StageBase, sound_player), 0x338);
         assert_eq!(offset_of!(StageBase, random), 0x340);
+        assert_eq!(offset_of!(StageBase, total_frame), 0x360);
+        assert_eq!(offset_of!(StageBase, _368), 0x368);
+        assert_eq!(offset_of!(StageBase, _36c), 0x36C);
 
         assert_eq!(size_of::<StageBattleBase>(), 0x770);
         assert_eq!(offset_of!(StageBattleBase, base), 0x0);
