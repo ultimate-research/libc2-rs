@@ -1,9 +1,9 @@
-use crate::app::StageBase;
+use crate::app::StageBaseStorage;
 
-#[repr(C)]
+#[repr(C, align(16))]
 pub struct StageBattleFieldL {
-    pub base: StageBase,
-    _738: [u8; 0x38],
+    pub base: StageBaseStorage,
+    _731: [u8; 0x3F],
 }
 
 #[cfg(test)]
@@ -15,6 +15,6 @@ mod tests {
 
         assert_eq!(size_of::<StageBattleFieldL>(), 0x770);
         assert_eq!(offset_of!(StageBattleFieldL, base), 0x0);
-        assert_eq!(offset_of!(StageBattleFieldL, _738), 0x738);
+        assert_eq!(offset_of!(StageBattleFieldL, _731), 0x731);
     }
 }

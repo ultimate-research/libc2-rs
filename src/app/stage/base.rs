@@ -1,4 +1,8 @@
-use core::ffi::c_char;
+use core::{
+    ffi::c_char,
+    mem::{self, MaybeUninit},
+    ops,
+};
 
 use crate::{
     app::{GlobalStageParameter, StageDynamicObject, StageGroundCrackParam, StageID},
@@ -38,7 +42,7 @@ pub struct StageBase {
     _348: usize,
     _350: usize,
     _358: usize,
-    _360: [u8; 0x3D8],
+    _360: [u8; 0x3D1],
 }
 
 #[cfg(feature = "impl")]
@@ -220,15 +224,41 @@ struct StageBaseVtable {
     _5d8: [usize; 88], // __cxa_deleted_virtual
 }
 
-#[repr(C)]
+#[repr(C, align(16))]
 pub struct StageBattleBase {
-    pub base: StageBase,
+    pub base: StageBaseStorage,
+    pub form_type: StageFormType,
     pub is_expanded_end: bool,
     pub expansion_scale: f32,
     pub camera_path: cpp::UniquePtr<()>,
     pub camera_path_frame: f32,
     pub camera_path_model: cpp::Vector<()>,
-    pub kumite_item_base_controller: usize,
+    pub kumite_item_base_controller: cpp::UniquePtr<()>,
+}
+
+#[repr(C)]
+pub enum StageFormType {
+    Battle,
+    End,
+}
+
+#[repr(C)]
+pub struct StageBaseStorage {
+    inner: MaybeUninit<[u8; 0x731]>,
+}
+
+impl ops::Deref for StageBaseStorage {
+    type Target = StageBase;
+
+    fn deref(&self) -> &Self::Target {
+        unsafe { mem::transmute::<&[u8; 0x731], &StageBase>(self.inner.assume_init_ref()) }
+    }
+}
+
+impl ops::DerefMut for StageBaseStorage {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { mem::transmute::<&mut [u8; 0x731], &mut StageBase>(self.inner.assume_init_mut()) }
+    }
 }
 
 #[repr(C)]
@@ -357,6 +387,7 @@ mod tests {
 
         assert_eq!(size_of::<StageBattleBase>(), 0x770);
         assert_eq!(offset_of!(StageBattleBase, base), 0x0);
+        assert_eq!(offset_of!(StageBattleBase, form_type), 0x734);
         assert_eq!(offset_of!(StageBattleBase, is_expanded_end), 0x738);
         assert_eq!(offset_of!(StageBattleBase, expansion_scale), 0x73C);
         assert_eq!(offset_of!(StageBattleBase, camera_path), 0x740);

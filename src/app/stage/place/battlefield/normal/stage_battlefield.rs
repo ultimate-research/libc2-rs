@@ -1,6 +1,6 @@
 use crate::app::StageBattleBase;
 
-#[repr(C)]
+#[repr(C, align(16))]
 pub struct StageBattleField {
     pub base: StageBattleBase,
     _770: [u8; 0x40],
