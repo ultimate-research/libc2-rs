@@ -353,7 +353,7 @@ struct StageBaseVtable {
 
     _2a0: [usize; 52], // __cxa_deleted_virtual
 
-    /// Frees the resources that may have been acquired.
+    /// Releases the resources that may have been acquired.
     pub destroy: extern "C" fn(*mut StageBase),
 
     /// Deallocates the memory reserved for `this`.

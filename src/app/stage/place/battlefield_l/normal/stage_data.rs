@@ -1,7 +1,9 @@
-use crate::cpp;
+use crate::{cpp, phx::ParameterReceiverBase};
 
 #[repr(C)]
 pub struct StageData {
+    pub base: ParameterReceiverBase,
+
     /// The number of frames representing the duration of the color correction sequence.
     pub color_correction_loop_length: i32,
 
@@ -63,9 +65,10 @@ mod tests {
         use super::*;
         use core::mem::offset_of;
 
-        assert_eq!(size_of::<StageData>(), 0x20);
-        assert_eq!(offset_of!(StageData, color_correction_loop_length), 0x0);
-        assert_eq!(offset_of!(StageData, color_correction_entries), 0x8);
+        assert_eq!(size_of::<StageData>(), 0x28);
+        assert_eq!(offset_of!(StageData, base), 0x0);
+        assert_eq!(offset_of!(StageData, color_correction_loop_length), 0x8);
+        assert_eq!(offset_of!(StageData, color_correction_entries), 0x10);
 
         assert_eq!(size_of::<ColorCorrectionEntry>(), 0x50);
         assert_eq!(offset_of!(ColorCorrectionEntry, start_frame), 0x0);

@@ -1,7 +1,9 @@
-use crate::cpp;
+use crate::{cpp, phx::ParameterReceiverBase};
 
 #[repr(C)]
 pub struct StageData {
+    pub base: ParameterReceiverBase,
+
     /// The radius of the Bumper's search collision.
     pub bumper_search_shape_radius: f32,
 
@@ -129,31 +131,32 @@ mod tests {
         use super::*;
         use core::mem::offset_of;
 
-        assert_eq!(size_of::<StageData>(), 0xA8);
-        assert_eq!(offset_of!(StageData, bumper_search_shape_radius), 0x0);
-        assert_eq!(offset_of!(StageData, bumper_attack_shape_radius), 0x4);
-        assert_eq!(offset_of!(StageData, bumper_attack_power), 0x8);
-        assert_eq!(offset_of!(StageData, bumper_attack_vector), 0xC);
-        assert_eq!(offset_of!(StageData, bumper_attack_r_eff), 0x10);
-        assert_eq!(offset_of!(StageData, bumper_attack_r_fix), 0x14);
-        assert_eq!(offset_of!(StageData, bumper_attack_r_add), 0x18);
-        assert_eq!(offset_of!(StageData, bumper_attack_serial_hit_frame), 0x1C);
-        assert_eq!(offset_of!(StageData, bumper_attack_interval), 0x20);
-        assert_eq!(offset_of!(StageData, bumper_y), 0x24);
-        assert_eq!(offset_of!(StageData, bumper_z), 0x28);
-        assert_eq!(offset_of!(StageData, bumper_x_base), 0x2C);
-        assert_eq!(offset_of!(StageData, bumper_x_range), 0x30);
-        assert_eq!(offset_of!(StageData, bumper_loop_length), 0x34);
-        assert_eq!(offset_of!(StageData, bumper_wait_length), 0x38);
-        assert_eq!(offset_of!(StageData, bumper_wait_animation_frame), 0x3C);
-        assert_eq!(offset_of!(StageData, bumper_attack_animation_start_frame), 0x40);
-        assert_eq!(offset_of!(StageData, bumper_attack_length), 0x44);
-        assert_eq!(offset_of!(StageData, floor_moving_intervals), 0x48);
-        assert_eq!(offset_of!(StageData, cliff_validity_ring_l), 0x60);
-        assert_eq!(offset_of!(StageData, cliff_validity_ring_r), 0x6C);
-        assert_eq!(offset_of!(StageData, cliff_validity_floor_l), 0x78);
-        assert_eq!(offset_of!(StageData, cliff_validity_floor_r), 0x84);
-        assert_eq!(offset_of!(StageData, camera_sub_pos), 0x90);
+        assert_eq!(size_of::<StageData>(), 0xB0);
+        assert_eq!(offset_of!(StageData, base), 0x0);
+        assert_eq!(offset_of!(StageData, bumper_search_shape_radius), 0x8);
+        assert_eq!(offset_of!(StageData, bumper_attack_shape_radius), 0xC);
+        assert_eq!(offset_of!(StageData, bumper_attack_power), 0x10);
+        assert_eq!(offset_of!(StageData, bumper_attack_vector), 0x14);
+        assert_eq!(offset_of!(StageData, bumper_attack_r_eff), 0x18);
+        assert_eq!(offset_of!(StageData, bumper_attack_r_fix), 0x1C);
+        assert_eq!(offset_of!(StageData, bumper_attack_r_add), 0x20);
+        assert_eq!(offset_of!(StageData, bumper_attack_serial_hit_frame), 0x24);
+        assert_eq!(offset_of!(StageData, bumper_attack_interval), 0x28);
+        assert_eq!(offset_of!(StageData, bumper_y), 0x2C);
+        assert_eq!(offset_of!(StageData, bumper_z), 0x30);
+        assert_eq!(offset_of!(StageData, bumper_x_base), 0x34);
+        assert_eq!(offset_of!(StageData, bumper_x_range), 0x38);
+        assert_eq!(offset_of!(StageData, bumper_loop_length), 0x3C);
+        assert_eq!(offset_of!(StageData, bumper_wait_length), 0x40);
+        assert_eq!(offset_of!(StageData, bumper_wait_animation_frame), 0x44);
+        assert_eq!(offset_of!(StageData, bumper_attack_animation_start_frame), 0x48);
+        assert_eq!(offset_of!(StageData, bumper_attack_length), 0x4C);
+        assert_eq!(offset_of!(StageData, floor_moving_intervals), 0x50);
+        assert_eq!(offset_of!(StageData, cliff_validity_ring_l), 0x68);
+        assert_eq!(offset_of!(StageData, cliff_validity_ring_r), 0x74);
+        assert_eq!(offset_of!(StageData, cliff_validity_floor_l), 0x80);
+        assert_eq!(offset_of!(StageData, cliff_validity_floor_r), 0x8C);
+        assert_eq!(offset_of!(StageData, camera_sub_pos), 0x98);
 
         assert_eq!(size_of::<FloorMovingInterval>(), 0x8);
         assert_eq!(offset_of!(FloorMovingInterval, start), 0x0);
