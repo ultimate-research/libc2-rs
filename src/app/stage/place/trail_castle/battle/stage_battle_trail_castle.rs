@@ -1,3 +1,4 @@
+/// The Battlefield/Ω form of the Hollow Bastion stage.
 #[repr(C)]
 pub struct StageBattleTrailCastle {
     _0: [u8; 0xA80],

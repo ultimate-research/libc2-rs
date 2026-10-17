@@ -1,3 +1,4 @@
+/// The Hollow Bastion stage.
 #[repr(C)]
 pub struct StageTrailCastle {
     _0: [u8; 0xA40],
