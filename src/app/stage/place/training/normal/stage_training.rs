@@ -1,5 +1,6 @@
 use crate::app::StageBaseStorage;
 
+/// The Training stage.
 #[repr(C, align(16))]
 pub struct StageTraining {
     pub base: StageBaseStorage,
@@ -7,6 +8,7 @@ pub struct StageTraining {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {
