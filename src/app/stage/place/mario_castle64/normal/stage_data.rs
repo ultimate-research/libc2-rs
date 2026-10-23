@@ -1,5 +1,6 @@
 use crate::{cpp, phx::ParameterReceiverBase};
 
+/// The specialized parameters for the Peach's Castle stage.
 #[repr(C)]
 pub struct StageData {
     pub base: ParameterReceiverBase,
@@ -87,6 +88,7 @@ pub struct StageData {
     pub camera_sub_pos: cpp::Vector<CameraSubPos>,
 }
 
+/// The set of parameters corresponding to when the sliding platform is moving.
 #[repr(C)]
 pub struct FloorMovingInterval {
     /// The animation frame index representing when the sliding platform has started moving.
@@ -96,6 +98,7 @@ pub struct FloorMovingInterval {
     pub end: f32,
 }
 
+/// The set of parameters corresponding to when an edge can be grabbed.
 #[repr(C)]
 pub struct CliffValidity {
     /// Determines if the cliff can be grabbed during the specified right-open interval of time.
@@ -110,7 +113,7 @@ pub struct CliffValidity {
     pub end: f32,
 }
 
-/// The position of a camera subject.
+/// The set of parameters corresponding to the position of a `CameraSubject`.
 #[repr(C)]
 pub struct CameraSubPos {
     /// The component along the x-axis.

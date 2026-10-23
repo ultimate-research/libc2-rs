@@ -1,5 +1,6 @@
 use crate::phx::ParameterReceiverBase;
 
+/// The specialized parameters for the Hollow Bastion stage.
 #[repr(C)]
 pub struct StageData {
     pub base: ParameterReceiverBase,

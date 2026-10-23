@@ -1,5 +1,6 @@
 use crate::{cpp, phx::ParameterReceiverBase};
 
+/// The specialized parameters for the Small Battlefield stage.
 #[repr(C)]
 pub struct StageData {
     pub base: ParameterReceiverBase,

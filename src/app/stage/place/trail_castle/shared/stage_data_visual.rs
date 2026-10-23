@@ -3,6 +3,7 @@ use crate::{
     phx::{Hash40, ParameterReceiverBase},
 };
 
+/// The specialized visual parameters for the Hollow Bastion stage.
 #[repr(C)]
 pub struct StageDataVisual {
     pub base: ParameterReceiverBase,
