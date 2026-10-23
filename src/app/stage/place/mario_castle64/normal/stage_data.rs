@@ -5,83 +5,73 @@ use crate::{cpp, phx::ParameterReceiverBase};
 pub struct StageData {
     pub base: ParameterReceiverBase,
 
-    /// The radius of the Bumper's search collision.
+    /// The radius of the bumper's search collision.
     pub bumper_search_shape_radius: f32,
 
-    /// The radius of the Bumper's attack collision.
+    /// The radius of the bumper's attack collision.
     pub bumper_attack_shape_radius: f32,
 
-    /// The damage dealt by the Bumper's attack collision.
+    /// The amount of damage to be inflicted by the bumper.
     pub bumper_attack_power: f32,
 
-    /// The launch angle of the Bumper's attack collision.
+    /// The angle of knockback to be inflicted by the bumper, in degrees.
     pub bumper_attack_vector: i32,
 
-    /// The knockback scaling of the Bumper's attack collision.
+    /// The coefficient for scaling knockback inflicted by the bumper.
     pub bumper_attack_r_eff: i32,
 
-    /// The fixed knockback of the Bumper's attack collision.
+    /// The fixed amount of knockback to be inflicted by the bumper.
     pub bumper_attack_r_fix: i32,
 
-    /// The base knockback of the Bumper's attack collision.
+    /// The minimum amount of knockback to be inflicted by the bumper.
     pub bumper_attack_r_add: i32,
 
-    /// The number of frames to wait before the Bumper's attack collision can damage an attacked opponent again.
+    /// The amount of time that the bumper waits before it can damage an attacked opponent again, in frames.
     pub bumper_attack_serial_hit_frame: u32,
 
-    /// The number of frames to put the Bumper's collisions to sleep for after attacking.
+    /// The amount of time that the bumper's collision is intangible for after attacking, in frames.
     pub bumper_attack_interval: f32,
 
-    /// The position of the Bumper along the y-axis.
+    /// The position of the bumper along the y-axis.
     pub bumper_y: f32,
 
-    /// The position of the Bumper along the z-axis.
+    /// The position of the bumper along the z-axis.
     pub bumper_z: f32,
 
-    /// The starting and ending position of the Bumper along the x-axis.
+    /// The home position of the bumper along the x-axis.
     pub bumper_x_base: f32,
 
-    /// The range that the Bumper can move between along the x-axis.
+    /// The length of the bumper's range of motion along the x-axis.
     pub bumper_x_range: f32,
 
-    /// The number of frames that the Bumper's move cycle lasts for.
+    /// The amount of time that the bumper starts moving for, in frames.
     pub bumper_loop_length: f32,
 
-    /// The number of frames that the Bumper waits at its base position for before repeating its move cycle.
+    /// The amount of time that the bumper stops moving for, in frames.
     pub bumper_wait_length: f32,
 
-    /// The animation frame index to stop animation playback on when the Bumper is not attacking.
+    /// The animation frame index to stop animation playback on when the bumper is not attacking.
     pub bumper_wait_animation_frame: i32,
 
-    /// The animation frame index to start animation playback on when the Bumper is attacking.
+    /// The animation frame index to start animation playback on when the bumper is set to attack.
     pub bumper_attack_animation_start_frame: i32,
 
-    /// The number of frames that the Bumper's attack collision is tangible for.
+    /// The amount of time that the bumper's attack collision is tangible for after sensing a fighter, in frames.
     pub bumper_attack_length: f32,
 
-    /// The collection of animation frame index intervals representing when the sliding platform is moving.
-    ///
-    /// These parameters are only used for playing sound effects as the sliding platform moves using an animation file.
+    /// The collection of time intervals representing when the sliding platform is moving.
     pub floor_moving_intervals: cpp::Vector<FloorMovingInterval>,
 
-    /// The parameters for controlling when the left side of the stage can be grabbed.
-    ///
-    /// These parameters are assigned to the cliff object with the dynamic name of `transform2` from the ground collision object with the dynamic name of `stc_ring_set`.
+    /// The parameters for controlling when the left side of the center platform can be grabbed.
     pub cliff_validity_ring_l: CliffValidity,
 
-    /// The parameters for controlling when the right side of the stage can be grabbed.
-    ///
-    /// These parameters are assigned to the cliff object with the dynamic name of `transform1` from the ground collision object with the dynamic name of `stc_ring_set`.
+    /// The parameters for controlling when the right side of the center platform can be grabbed.
     pub cliff_validity_ring_r: CliffValidity,
 
     /// The parameters for controlling when the left side of the sliding platform can be grabbed.
-    ///
-    /// These parameters are assigned to the cliff object with the dynamic name of `transform2` from the ground collision object with the dynamic name of `dyr_floor_set`.
     pub cliff_validity_floor_l: CliffValidity,
 
     /// The parameters for controlling when the right side of the sliding platform can be grabbed.
-    ///
-    /// These parameters are assigned to the cliff object with the dynamic name of `transform1` from the ground collision object with the dynamic name of `dyr_floor_set`.
     pub cliff_validity_floor_r: CliffValidity,
 
     /// The collection of positions for each camera subject.
@@ -101,9 +91,7 @@ pub struct FloorMovingInterval {
 /// The set of parameters corresponding to when an edge can be grabbed.
 #[repr(C)]
 pub struct CliffValidity {
-    /// Determines if the cliff can be grabbed during the specified right-open interval of time.
-    ///
-    /// Animation frame indices outside of the interval use the inverse of the [`validity`](#structfield.validity) state.
+    /// Determines if the assigned edge can be grabbed during the specified interval of time.
     pub validity: bool,
 
     /// The animation frame index representing when to start using the [`validity`](#structfield.validity) state.
@@ -116,13 +104,13 @@ pub struct CliffValidity {
 /// The set of parameters corresponding to the position of a `CameraSubject`.
 #[repr(C)]
 pub struct CameraSubPos {
-    /// The component along the x-axis.
+    /// The position along the x-axis.
     pub x: f32,
 
-    /// The component along the y-axis.
+    /// The position along the y-axis.
     pub y: f32,
 
-    /// The component along the z-axis.
+    /// The position along the z-axis.
     pub z: f32,
 }
 
