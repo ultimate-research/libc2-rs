@@ -1,18 +1,17 @@
-use std::num::NonZeroU16;
-
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C, packed)]
 pub struct RandomSetting {
     /// The selected pet to appear in the background.
     pub pet: Pet,
 
-    /// The selected route segments for the puppy.
+    /// The combination of selectable routes for the puppy.
     pub dog_route: DogRoute,
 
     /// The selected route for the kitten.
     pub cat_route: u8,
 }
 
+/// A numeric identifier for a pet.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
 pub enum Pet {
@@ -36,6 +35,20 @@ pub enum Pet {
     Cat,
 }
 
+/// A combination of selectable routes for the puppy.
+///
+/// Each of the four nybbles corresponds to a specific section, in order:
+///
+/// - `out_to_a`; the entrance
+/// - `a_to_b`; the first intermediary behavior
+/// - `b_to_c`; the second intermediary behavior
+/// - `c_to_out`; the exit
+///
+/// Upon each loop of the complete route, another route in the section may be selected.
+///
+/// At least one bit in each nybble must be set, otherwise an infinite loop
+/// will occur, as the game will indefinitely search for a nonzero bit in a
+/// copy of the bit field.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct DogRoute {
@@ -43,91 +56,34 @@ pub struct DogRoute {
 }
 
 impl DogRoute {
-    /// The bitmask for the raw value corresponding to the entrance route segment.
-    const OUT_TO_A_MASK: u16 = 0b0000_0000_0000_1111;
-
-    /// The right-hand shift operand for the raw value corresponding to the entrance route segment.
-    const OUT_TO_A_SHIFT: u32 = Self::OUT_TO_A_MASK.leading_zeros();
-
-    /// The bitmask for the raw value corresponding to the first intermediate route segment.
-    const A_TO_B_MASK: u16 = 0b0000_0000_1111_0000;
-
-    /// The right-hand shift operand for the raw value corresponding to the first intermediate route segment.
-    const A_TO_B_SHIFT: u32 = Self::A_TO_B_MASK.leading_zeros();
-
-    /// The bitmask for the raw value corresponding to the second intermediate route segment.
-    const B_TO_C_MASK: u16 = 0b0000_1111_0000_0000;
-
-    /// The right-hand shift operand for the raw value corresponding to the second intermediate route segment.
-    const B_TO_C_SHIFT: u32 = Self::B_TO_C_MASK.leading_zeros();
-
-    /// The bitmask for the raw value corresponding to the exit route segment.
-    const C_TO_OUT_MASK: u16 = 0b1111_0000_0000_0000;
-
-    /// The right-hand shift operand for the raw value corresponding to the exit route segment.
-    const C_TO_OUT_SHIFT: u32 = Self::C_TO_OUT_MASK.leading_zeros();
-
-    /// Creates a new `DogRoute` from the raw values of each route segment.
-    pub const fn new(
-        out_to_a: NonZeroU16,
-        a_to_b: NonZeroU16,
-        b_to_c: NonZeroU16,
-        c_to_out: NonZeroU16,
-    ) -> Option<Self> {
-        let out_to_a = if out_to_a.get() < 16 {
-            out_to_a.get() << Self::OUT_TO_A_SHIFT & Self::OUT_TO_A_MASK
-        } else {
-            return None;
-        };
-
-        let a_to_b = if a_to_b.get() < 16 {
-            a_to_b.get() << Self::A_TO_B_SHIFT & Self::A_TO_B_MASK
-        } else {
-            return None;
-        };
-
-        let b_to_c = if b_to_c.get() < 16 {
-            b_to_c.get() << Self::B_TO_C_SHIFT & Self::B_TO_C_MASK
-        } else {
-            return None;
-        };
-
-        let c_to_out = if c_to_out.get() < 16 {
-            c_to_out.get() << Self::C_TO_OUT_SHIFT & Self::C_TO_OUT_MASK
-        } else {
-            return None;
-        };
-
-        Some(Self {
-            inner: out_to_a | a_to_b | b_to_c | c_to_out,
-        })
+    /// Creates a new `DogRoute`.
+    pub const fn new() -> Self {
+        Self { inner: 0 }
     }
 
-    /// Extracts the raw value corresponding to the entrance route segment.
-    pub const fn out_to_a(&self) -> Option<NonZeroU16> {
-        let route = (self.inner & Self::OUT_TO_A_MASK) >> Self::OUT_TO_A_SHIFT;
-
-        NonZeroU16::new(route)
+    /// Creates a new `DogRoute` with the given route available for selection.
+    pub const fn with_route(mut self, id: u32) -> Self {
+        self.on_route(id);
+        self
     }
 
-    /// Extracts the raw value corresponding to the first intermediate route segment.
-    pub const fn a_to_b(&self) -> Option<NonZeroU16> {
-        let route = (self.inner & Self::A_TO_B_MASK) >> Self::A_TO_B_SHIFT;
-
-        NonZeroU16::new(route)
+    /// Returns `true` if the given route is selectable.
+    pub const fn is_route(&self, id: u32) -> bool {
+        self.inner & (1 << id) != 0
     }
 
-    /// Extracts the raw value corresponding to the second intermediate route segment.
-    pub const fn b_to_c(&self) -> Option<NonZeroU16> {
-        let route = (self.inner & Self::B_TO_C_MASK) >> Self::B_TO_C_SHIFT;
-
-        NonZeroU16::new(route)
+    /// Enables the selectability of the given route.
+    pub const fn on_route(&mut self, id: u32) {
+        self.inner |= 1 << id;
     }
 
-    /// Extracts the raw value corresponding to the exit route segment.
-    pub const fn c_to_out(&self) -> Option<NonZeroU16> {
-        let route = (self.inner & Self::C_TO_OUT_MASK) >> Self::C_TO_OUT_SHIFT;
+    /// Disables the selectability of the given route.
+    pub const fn off_route(&mut self, id: u32) {
+        self.inner &= !(1 << id);
+    }
 
-        NonZeroU16::new(route)
+    /// Consumes the `DogRoute`, returning the underlying value.
+    pub const fn into_inner(self) -> u16 {
+        self.inner
     }
 }
