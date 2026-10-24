@@ -17,7 +17,7 @@ pub struct StageData {
     /// The angle of knockback to be inflicted by the bumper, in degrees.
     pub bumper_attack_vector: i32,
 
-    /// The coefficient for scaling knockback inflicted by the bumper.
+    /// The coefficient for scaling knockback to be inflicted by the bumper.
     pub bumper_attack_r_eff: i32,
 
     /// The fixed amount of knockback to be inflicted by the bumper.
@@ -26,10 +26,10 @@ pub struct StageData {
     /// The minimum amount of knockback to be inflicted by the bumper.
     pub bumper_attack_r_add: i32,
 
-    /// The amount of time that the bumper waits before it can damage an attacked opponent again, in frames.
+    /// The amount of time that the bumper must wait before it can damage an attacked opponent again, in frames.
     pub bumper_attack_serial_hit_frame: u32,
 
-    /// The amount of time that the bumper's collision is intangible for after attacking, in frames.
+    /// The amount of time that the bumper's collision is intangible for after the attack period, in frames.
     pub bumper_attack_interval: f32,
 
     /// The position of the bumper along the y-axis.
