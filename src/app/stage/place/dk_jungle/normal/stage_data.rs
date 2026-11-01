@@ -198,6 +198,7 @@ pub struct StageData {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {

@@ -3,7 +3,7 @@ use crate::app::StageBaseStorage;
 use super::StageData;
 
 /// The Kongo Jungle stage.
-#[repr(C)]
+#[repr(C, align(16))]
 pub struct StageDKJungle {
     pub base: StageBaseStorage,
     pub stage_data: StageData,
@@ -11,6 +11,7 @@ pub struct StageDKJungle {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {
