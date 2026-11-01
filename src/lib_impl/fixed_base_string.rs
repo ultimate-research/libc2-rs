@@ -1,5 +1,5 @@
 use core::{
-    fmt,
+    fmt, slice,
     str::{FromStr, Utf8Error},
 };
 
@@ -50,7 +50,7 @@ impl<const N: usize> FixedBaseString<N> {
         Self {
             hash: Fnv1::new(),
             len: 0,
-            buf: [0; N],
+            buf: [0; _],
         }
     }
 
@@ -107,8 +107,9 @@ impl<const N: usize> FixedBaseString<N> {
     /// let s = FixedBaseString::<64>::try_from("curve3").unwrap();
     /// assert_eq!(s.as_bytes(), b"curve3");
     /// ```
-    pub fn as_bytes(&self) -> &[u8] {
-        &self.buf[..self.len()]
+    pub const fn as_bytes(&self) -> &[u8] {
+        // SAFETY: A pointer to our own array is always valid.
+        unsafe { slice::from_raw_parts(self.buf.as_ptr(), self.len()) }
     }
 
     /// Converts the underlying buffer to a string slice if it contains valid UTF-8.
@@ -123,7 +124,7 @@ impl<const N: usize> FixedBaseString<N> {
     /// let s = FixedBaseString::<64>::try_from("curve4").unwrap();
     /// assert_eq!(s.to_str().unwrap(), "curve4");
     /// ```
-    pub fn to_str(&self) -> Result<&str, Utf8Error> {
+    pub const fn to_str(&self) -> Result<&str, Utf8Error> {
         str::from_utf8(self.as_bytes())
     }
 
