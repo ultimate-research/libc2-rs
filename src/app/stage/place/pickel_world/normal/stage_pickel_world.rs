@@ -4,81 +4,128 @@ pub struct StagePickelWorld {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
+#[repr(C)]
+pub struct ExSetting {
+    /// The selected time of day.
+    pub time_of_day: TimeOfDayEx,
+
+    /// The selected biome.
+    pub biome: BiomeEx,
+
+    /// The selected passive guest character.
+    pub guest: GuestEx,
+
+    /// Determines if hostile mobs should not appear.
+    pub is_hide_monster: bool,
+}
+
+/// A numeric identifier for the time of day.
+#[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum TimeOfDaySpirits {
+pub enum TimeOfDayEx {
+    /// Day-night cycle
     #[default]
     Cycle,
+
+    /// Daytime
     Daytime,
+
+    /// Night
     Night,
 }
 
+/// A numeric identifier for a biome with additional general variants.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum BiomeSpirits {
+pub enum BiomeEx {
+    /// Random
     #[default]
     Random,
+
+    /// Plains
     Plains,
+
+    /// Birch Forest
     BirchForest,
+
+    /// Savanna
     Savanna,
+
+    /// Taiga
     Taiga,
+
+    /// Snowy Tundra
     SnowyTundra,
+
+    /// Stone Shore
     StoneShore,
 }
 
+/// A numeric identifier for a passive guest character with additional general variants.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum FarmAnimalSpirits {
+pub enum GuestEx {
+    /// Random
     #[default]
     Random,
+
+    /// Chicken
     Chicken,
+
+    /// Cow
     Cow,
+
+    /// Sheep
     Sheep,
+
+    /// None
     None,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct ExSetting {
-    pub time_of_day: TimeOfDaySpirits,
-    pub biome: BiomeSpirits,
-    pub farm_animal: FarmAnimalSpirits,
-    pub is_hide_monster: bool,
+pub struct RandomSetting {
+    // TODO: Field documentation.
+    pub world_info: WorldInfo,
 }
 
-#[derive(Debug, Clone, Copy)]
-#[repr(u8)]
-pub enum Biome {
-    Plains,
-    BirchForest,
-    Savanna,
-    Taiga,
-    SnowyTundra,
-    StoneShore,
-}
-
-#[derive(Debug, Clone, Copy)]
-#[repr(u8)]
-pub enum FarmAnimal {
-    Sheep,
-    Chicken,
-    Cow,
-}
-
+// TODO: Type-level documentation.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct RandomSetting {
-    pub world_info: u8,
+pub struct WorldInfo {
+    inner: u8,
 }
 
-impl RandomSetting {
-    pub const fn new(biome: Biome, farm_animal: FarmAnimal) -> Self {
-        Self {
-            world_info: biome as u8 | (farm_animal as u8) << 3,
-        }
+impl WorldInfo {
+    /// The bitmask for the raw value corresponding to the selected biome.
+    const BIOME_MASK: u8 = 0b00000111;
+
+    /// The bitmask for the raw value corresponding to the selected passive guest character.
+    const GUEST_MASK: u8 = 0b00011000;
+
+    /// The right-hand shift operand for extracting the value corresponding to the selected passive guest character.
+    const GUEST_SHIFT: u32 = Self::GUEST_MASK.leading_zeros();
+
+    /// Creates a new `WorldInfo`.
+    pub const fn new() -> Self {
+        Self { inner: 0 }
     }
 
-    pub const fn biome(self) -> Option<Biome> {
-        match self.world_info & 0b00000111 {
+    /// Creates a new `WorldInfo` with the given biome.
+    pub const fn with_biome(mut self, biome: Biome) -> Self {
+        self.set_biome(biome);
+        self
+    }
+
+    /// Creates a new `WorldInfo` with the given guest character.
+    pub const fn with_guest(mut self, guest: Guest) -> Self {
+        self.set_guest(guest);
+        self
+    }
+
+    /// Extracts the selected biome.
+    pub const fn biome(&self) -> Option<Biome> {
+        match self.inner & Self::BIOME_MASK {
             0 => Some(Biome::Plains),
             1 => Some(Biome::BirchForest),
             2 => Some(Biome::Savanna),
@@ -89,14 +136,67 @@ impl RandomSetting {
         }
     }
 
-    pub const fn farm_animal(self) -> Option<FarmAnimal> {
-        match (self.world_info & 0b00011000) >> 3 {
-            0 => Some(FarmAnimal::Sheep),
-            1 => Some(FarmAnimal::Chicken),
-            2 => Some(FarmAnimal::Cow),
+    /// Extracts the selected passive guest character.
+    pub const fn guest(&self) -> Option<Guest> {
+        match (self.inner & Self::GUEST_MASK) >> Self::GUEST_SHIFT {
+            0 => Some(Guest::Sheep),
+            1 => Some(Guest::Chicken),
+            2 => Some(Guest::Cow),
             _ => None,
         }
     }
+
+    /// Assigns the given biome to the selected biome.
+    pub const fn set_biome(&mut self, biome: Biome) {
+        self.inner = (self.inner & !Self::BIOME_MASK) | biome as u8;
+    }
+
+    /// Assigns the given passive guest character to the selected passive guest character.
+    pub const fn set_guest(&mut self, guest: Guest) {
+        self.inner = (self.inner & !Self::GUEST_MASK) | ((guest as u8) << Self::GUEST_SHIFT);
+    }
+
+    /// Consumes the `WorldInfo`, returning the underlying value.
+    pub const fn into_inner(self) -> u8 {
+        self.inner
+    }
+}
+
+/// A numeric identifier for a biome.
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum Biome {
+    /// Plains
+    Plains,
+
+    /// Birch Forest
+    BirchForest,
+
+    /// Savanna
+    Savanna,
+
+    /// Taiga
+    Taiga,
+
+    /// Snowy Tundra
+    SnowyTundra,
+
+    /// Stone Shore
+    StoneShore,
+}
+
+/// A numeric identifier for a passive guest character.
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum Guest {
+    /// Sheep
+    Sheep,
+
+    /// Chicken
+    Chicken,
+
+    /// Cow
+    Cow,
 }
 
 #[cfg(test)]
