@@ -4,6 +4,17 @@ pub struct StageAnimalIsland {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
+#[repr(C)]
+pub struct RandomSetting {
+    /// The selected configuration of the island.
+    pub island: u8,
+
+    /// The selected guest character.
+    pub guest: Guest,
+}
+
+/// A numeric identifier for a guest character.
+#[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
 pub enum Guest {
     /// Grams
@@ -18,13 +29,6 @@ pub enum Guest {
 
     /// Leilani
     Kuuko,
-}
-
-#[derive(Debug, Clone, Copy, Default)]
-#[repr(C)]
-pub struct RandomSetting {
-    pub island: u8,
-    pub guest: Guest,
 }
 
 #[cfg(test)]
