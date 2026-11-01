@@ -25,7 +25,7 @@ impl<T> Vector<T> {
         unsafe { self.end.offset_from_unsigned(self.begin) }
     }
 
-    /// Returns the total number of elements the vector can hold without reallocating.
+    /// Returns the number of elements the vector can hold without reallocating.
     pub const fn capacity(&self) -> usize {
         unsafe { self.capacity.offset_from_unsigned(self.begin) }
     }
@@ -51,18 +51,6 @@ impl<T> Vector<T> {
         }
 
         unsafe { Some(slice::from_raw_parts_mut(self.begin, self.len())) }
-    }
-}
-
-impl<T> AsRef<Vector<T>> for Vector<T> {
-    fn as_ref(&self) -> &Vector<T> {
-        self
-    }
-}
-
-impl<T> AsMut<Vector<T>> for Vector<T> {
-    fn as_mut(&mut self) -> &mut Vector<T> {
-        self
     }
 }
 
