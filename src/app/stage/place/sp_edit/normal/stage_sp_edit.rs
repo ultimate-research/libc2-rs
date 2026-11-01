@@ -4,27 +4,52 @@ pub struct StageSPEdit {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
-#[repr(u8)]
-pub enum Bg {
-    #[default]
-    BattleField,
-    Tomodachi,
-    WreckingCrew,
-    PokeKalos,
-    FEColloseum,
-    StreetPass,
-    IceTop,
-    End,
-    MotherMagicant,
-    LuigiMansion,
-    MarioRainbow,
-    MarioGalaxy,
-}
-
-#[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct RandomSetting {
+    /// The selected background for the stage.
     pub bg: Bg,
+}
+
+/// A numeric identifier for the background of a stage.
+#[derive(Debug, Clone, Copy, Default)]
+#[repr(u8)]
+pub enum Bg {
+    /// Battlefield
+    #[default]
+    BattleField,
+
+    /// Tomodachi Life
+    Tomodachi,
+
+    /// Wrecking Crew
+    WreckingCrew,
+
+    /// Kalos Pokémon League
+    PokeKalos,
+
+    /// Coliseum
+    FEColloseum,
+
+    /// Find Mii
+    StreetPass,
+
+    /// Summit
+    IceTop,
+
+    /// Final Destination
+    End,
+
+    /// Magicant
+    MotherMagicant,
+
+    /// Luigi's Mansion
+    LuigiMansion,
+
+    /// Rainbow Cruise
+    MarioRainbow,
+
+    /// Mario Galaxy
+    MarioGalaxy,
 }
 
 #[cfg(test)]
