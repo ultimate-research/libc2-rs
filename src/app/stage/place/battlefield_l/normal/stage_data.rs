@@ -5,32 +5,32 @@ use crate::{cpp, phx::ParameterReceiverBase};
 pub struct StageData {
     pub base: ParameterReceiverBase,
 
-    /// The number of frames representing the duration of the color correction sequence.
+    /// The duration of the color correction animation, in frames.
     pub color_correction_loop_length: i32,
 
-    /// The collection of general parameters for each color correction key frame.
+    /// The collection of general parameters for each color correction keyframe.
     pub color_correction_entries: cpp::Vector<ColorCorrectionEntry>,
 }
 
-/// The general parameters for a color correction key frame.
+/// The general parameters for a color correction keyframe.
 #[repr(C)]
 pub struct ColorCorrectionEntry {
-    /// The frame to start the fade-in of this key frame on.
+    /// The animation frame index to start interpolation toward the target color on.
     pub start_frame: i32,
 
-    /// The number of frames representing the duration of the fade-in.
+    /// The amount of time to interpolate toward the target color, in frames.
     pub fadein_frame: i32,
 
-    /// The frame to start the fade-out of this key frame on.
+    /// The animation frame index to stop interpolation away from the target color on.
     pub end_frame: i32,
 
-    /// The number of frames representing the duration of the fade-out.
+    /// The amount of time to interpolate away from the target color, in frames.
     pub fadeout_frame: i32,
 
-    /// The name of the color grading lookup table resource to fade into.
+    /// The name of the color lookup table resource to interpolate toward.
     pub lut_name: cpp::String,
 
-    /// Determines if this key frame should apply to the stage layer.
+    /// Determines if this keyframe should apply to the stage instead of the characters.
     pub is_ground_layer: bool,
 
     /// The red component of the color scale.
