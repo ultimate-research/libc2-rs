@@ -1,9 +1,13 @@
-#[repr(C)]
+use crate::app::StageBaseStorage;
+
+/// The stage where Rathalos is fought.
+#[repr(C, align(16))]
 pub struct StageBossStageRathalos {
-    _0: [u8; 0x740],
+    pub base: StageBaseStorage,
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {
@@ -11,6 +15,6 @@ mod tests {
         use core::mem::offset_of;
 
         assert_eq!(size_of::<StageBossStageRathalos>(), 0x740);
-        assert_eq!(offset_of!(StageBossStageRathalos, _0), 0x0);
+        assert_eq!(offset_of!(StageBossStageRathalos, base), 0x0);
     }
 }
