@@ -225,13 +225,13 @@ struct StageBaseVtable {
     // TODO. Related to the camera. Executes once per frame. Always returns `false`.
     pub _158: extern "C" fn(*const StageBase) -> bool,
 
-    /// Returns the minimum distance from the pivot the camera can zoom in towards using camera controls.
+    /// Returns the minimum distance from the pivot the camera can zoom in toward using camera controls.
     pub get_pause_camera_min_distance: extern "C" fn(*const StageBase) -> f32,
 
-    /// Returns the maximum distance from the pivot the camera can zoom out towards using camera controls.
+    /// Returns the maximum distance from the pivot the camera can zoom out toward using camera controls.
     pub get_pause_camera_max_distance: extern "C" fn(*const StageBase) -> f32,
 
-    /// Returns the minimum distance from the pivot the camera can zoom in towards in Training.
+    /// Returns the minimum distance from the pivot the camera can zoom in toward in Training.
     pub get_training_camera_min_distance: extern "C" fn(*const StageBase) -> f32,
 
     // TODO. Executes upon the first frame of battle entry.
@@ -559,7 +559,7 @@ impl StageCreateParam {
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalColorParam {
-    /// The frame duration of the interpolation towards the initial target character color.
+    /// The amount of time to interpolate toward the initial target character color, in frames.
     pub frame_character_1: i32,
 
     /// The red component of the initial target character color scale.
@@ -586,7 +586,7 @@ pub struct StageFinalColorParam {
     /// The contrast scale of the initial target character color.
     pub contrast_character_1: f32,
 
-    /// The frame duration of the interpolation towards the final target character color.
+    /// The amount of time to interpolate toward the final target character color, in frames.
     pub frame_character_2: i32,
 
     /// The red component of the final target character color scale.
@@ -613,7 +613,7 @@ pub struct StageFinalColorParam {
     /// The contrast scale of the final target character color.
     pub contrast_character_2: f32,
 
-    /// The frame duration of the interpolation towards the initial target stage color.
+    /// The amount of time to interpolate toward the initial target stage color, in frames.
     pub frame_ground_1: i32,
 
     /// The red component of the initial target stage color scale.
@@ -640,7 +640,7 @@ pub struct StageFinalColorParam {
     /// The contrast scale of the initial target stage color.
     pub contrast_ground_1: f32,
 
-    /// The frame duration of the interpolation towards the final target stage color.
+    /// The amount of time to interpolate toward the final target stage color, in frames.
     pub frame_ground_2: i32,
 
     /// The red component of the final target stage color scale.
