@@ -6,6 +6,7 @@ pub struct StageBalloonFight {
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct RandomSetting {
+    /// The selected variation of the stage.
     pub level: u8,
 }
 
