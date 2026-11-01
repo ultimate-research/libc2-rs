@@ -4,30 +4,49 @@ pub struct StagePokeKalos {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
+#[repr(C)]
+pub struct ExSetting {
+    /// The selected chamber that can be switched to.
+    pub room: RoomEx,
+
+    /// The selected classification of Pokémon.
+    pub pokemon: PokemonEx,
+}
+
+/// A numeric identifier for a chamber that can be switched to.
+#[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum Room {
+pub enum RoomEx {
+    /// Random
     #[default]
     Random,
+
+    /// Fire-type Chamber
     FlameTransition,
+
+    /// Water-type Chamber
     WaterTransition,
+
+    /// Steel-type Chamber
     SteelTransition,
+
+    /// Dragon-type Chamber
     DragonTransition,
 }
 
+/// A numeric identifier for a classification of Pokémon.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum Pokemon {
+pub enum PokemonEx {
+    /// Random
     #[default]
     Random,
-    Rare,
-    Normal,
-}
 
-#[derive(Debug, Clone, Copy, Default)]
-#[repr(C)]
-pub struct ExSetting {
-    pub room: Room,
-    pub pokemon: Pokemon,
+    /// Legendary/Mythical
+    Rare,
+
+    /// Ordinary
+    Normal,
 }
 
 #[cfg(test)]
