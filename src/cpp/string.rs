@@ -87,7 +87,8 @@ impl String {
 
     /// Converts this `String` into a string slice.
     pub const unsafe fn as_str_unchecked(&self) -> &str {
-        str::from_utf8_unchecked(self.as_bytes())
+        // SAFETY: The caller must guarantee that `self` contains valid UTF-8.
+        unsafe { str::from_utf8_unchecked(self.as_bytes()) }
     }
 
     /// Yields a mutable string slice if the `String` contains valid UTF-8.
@@ -96,8 +97,9 @@ impl String {
     }
 
     /// Converts this `String` into a mutable string slice.
-    pub const unsafe fn as_mut_str_unchecked(&self) -> &str {
-        str::from_utf8_unchecked_mut(self.as_bytes_mut())
+    pub const unsafe fn as_mut_str_unchecked(&mut self) -> &mut str {
+        // SAFETY: The caller must guarantee that `self` contains valid UTF-8.
+        unsafe { str::from_utf8_unchecked_mut(self.as_bytes_mut()) }
     }
 
     /// Returns `true` if the string is too long to avoid memory allocation.
