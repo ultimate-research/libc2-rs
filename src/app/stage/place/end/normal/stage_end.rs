@@ -7,8 +7,22 @@ pub struct StageEnd {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
+#[repr(C)]
+pub struct ExSetting {
+    /// The background that should appear and remain fixed on.
+    pub landscape: LandscapeEx,
+
+    /// Determines if the decorations atop the surface of the stage should not appear.
+    pub is_hide_ring_decorations: bool,
+
+    /// Determines if the four floating platforms should appear.
+    pub is_enable_floating_4plate: bool,
+}
+
+/// A numeric identifier for a background with additional general variants.
+#[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
-pub enum LandscapeSpirits {
+pub enum LandscapeEx {
     #[default]
     Random,
     Median,
@@ -18,17 +32,12 @@ pub enum LandscapeSpirits {
 
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct ExSetting {
-    /// The background that should appear and remain fixed on.
-    pub landscape: LandscapeSpirits,
-
-    /// Determines if the decorations atop the surface of the stage should not appear.
-    pub is_hide_ring_decorations: bool,
-
-    /// Determines if the four floating platforms should appear.
-    pub is_enable_floating_4plate: bool,
+pub struct RandomSetting {
+    /// The selected background.
+    pub landscape: Landscape,
 }
 
+/// A numeric identifier for a background.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(u8)]
 pub enum Landscape {
@@ -38,13 +47,8 @@ pub enum Landscape {
     Dark,
 }
 
-#[derive(Debug, Clone, Copy, Default)]
-#[repr(C)]
-pub struct RandomSetting {
-    pub landscape: Landscape,
-}
-
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {
