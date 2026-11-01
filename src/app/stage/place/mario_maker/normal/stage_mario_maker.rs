@@ -6,11 +6,18 @@ pub struct StageMarioMaker {
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct RandomSetting {
-    pub _0: u8,
-    pub _1: u8,
-    pub _2: u8,
-    pub _3: u8,
-    pub _4: u32,
+    /// Determines if the selected formation should represent solid ground
+    /// instead of a floating platform.
+    pub is_ground_type: bool,
+
+    /// The collection of indices into `island_type_settings` or `ground_type_settings`
+    /// for generating the left, middle, and right sides of the stage, respectively.
+    pub type_settings: [i8; 3],
+
+    /// The seed for a dedicated pseudorandom number generator used to select
+    /// other random elements, such as the initial game style, the layout of
+    /// floating platforms, and the design of the hand.
+    pub seed: u32,
 }
 
 #[cfg(test)]
