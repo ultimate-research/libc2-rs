@@ -86,6 +86,10 @@ impl String {
     }
 
     /// Converts this `String` into a string slice.
+    ///
+    /// # Safety
+    ///
+    /// The underlying character data must be valid UTF-8.
     pub const unsafe fn as_str_unchecked(&self) -> &str {
         // SAFETY: The caller must guarantee that `self` contains valid UTF-8.
         unsafe { str::from_utf8_unchecked(self.as_bytes()) }
@@ -97,6 +101,10 @@ impl String {
     }
 
     /// Converts this `String` into a mutable string slice.
+    ///
+    /// # Safety
+    ///
+    /// The underlying character data must be valid UTF-8.
     pub const unsafe fn as_mut_str_unchecked(&mut self) -> &mut str {
         // SAFETY: The caller must guarantee that `self` contains valid UTF-8.
         unsafe { str::from_utf8_unchecked_mut(self.as_bytes_mut()) }
