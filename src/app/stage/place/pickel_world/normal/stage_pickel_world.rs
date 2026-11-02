@@ -85,11 +85,11 @@ pub enum GuestEx {
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct RandomSetting {
-    // TODO: Field documentation.
+    /// The set of configured options for the world.
     pub world_info: WorldInfo,
 }
 
-// TODO: Type-level documentation.
+/// A set of configurable options for the world.
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
 pub struct WorldInfo {
@@ -103,7 +103,7 @@ impl WorldInfo {
     /// The bitmask for the raw value corresponding to the selected passive guest character.
     const GUEST_MASK: u8 = 0b00011000;
 
-    /// The right-hand shift operand for extracting the value corresponding to the selected passive guest character.
+    /// The right-hand shift operand for extracting the raw value corresponding to the selected passive guest character.
     const GUEST_SHIFT: u32 = Self::GUEST_MASK.leading_zeros();
 
     /// Creates a new `WorldInfo`.
