@@ -17,7 +17,7 @@ pub struct StageExSetting {
     pub mario_castledx: i8,
     pub mario_dolpic: i8,
     pub mario_maker: i8,
-    _10: i8,
+    pub mario_paper: i8,
     pub mario_uworld: i8,
     pub mg_shadowmoses: i8,
     pub pikmin_planet: i8,
@@ -69,7 +69,7 @@ mod tests {
         assert_eq!(offset_of!(StageExSetting, mario_castledx), 0xD);
         assert_eq!(offset_of!(StageExSetting, mario_dolpic), 0xE);
         assert_eq!(offset_of!(StageExSetting, mario_maker), 0xF);
-        assert_eq!(offset_of!(StageExSetting, _10), 0x10);
+        assert_eq!(offset_of!(StageExSetting, mario_paper), 0x10);
         assert_eq!(offset_of!(StageExSetting, mario_uworld), 0x11);
         assert_eq!(offset_of!(StageExSetting, mg_shadowmoses), 0x12);
         assert_eq!(offset_of!(StageExSetting, pikmin_planet), 0x13);
