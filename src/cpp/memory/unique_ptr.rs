@@ -1,6 +1,6 @@
-use core::{any, mem::MaybeUninit, ops};
+use core::{any, fmt, mem::MaybeUninit, ops};
 
-/// A pointer type that uniquely owns a heap allocation of type T.
+/// A pointer type that uniquely owns a heap allocation of type `T`.
 #[repr(C)]
 pub struct UniquePtr<T> {
     ptr: MaybeUninit<*mut T>,
@@ -68,6 +68,12 @@ impl<T> UniquePtr<T> {
     pub const unsafe fn as_mut_unchecked<'a>(self) -> &'a mut T {
         // SAFETY: the caller must guarantee that `self` is valid for a reference
         unsafe { &mut *self.as_mut_ptr() }
+    }
+}
+
+impl<T> fmt::Debug for UniquePtr<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Pointer::fmt(&self.as_ptr(), f)
     }
 }
 
