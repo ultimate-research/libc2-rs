@@ -5,7 +5,7 @@ use crate::app::stage::{
 
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct StageRandomSetting {
+pub struct GlobalStageRandomSetting {
     pub end: end::RandomSetting,
     pub punchout: punchout::RandomSetting,
     pub mario_maker: mario_maker::RandomSetting,
@@ -28,18 +28,18 @@ mod tests {
         use super::*;
         use core::mem::offset_of;
 
-        assert_eq!(size_of::<StageRandomSetting>(), 0x28);
-        assert_eq!(offset_of!(StageRandomSetting, end), 0x0);
-        assert_eq!(offset_of!(StageRandomSetting, punchout), 0x2);
-        assert_eq!(offset_of!(StageRandomSetting, mario_maker), 0x4);
-        assert_eq!(offset_of!(StageRandomSetting, balloonfight), 0xC);
-        assert_eq!(offset_of!(StageRandomSetting, nintendogs), 0xD);
-        assert_eq!(offset_of!(StageRandomSetting, animal_island), 0x11);
-        assert_eq!(offset_of!(StageRandomSetting, animal_city), 0x13);
-        assert_eq!(offset_of!(StageRandomSetting, sp_edit), 0x18);
-        assert_eq!(offset_of!(StageRandomSetting, dolly_stadium), 0x19);
-        assert_eq!(offset_of!(StageRandomSetting, pickel_world), 0x21);
-        assert_eq!(offset_of!(StageRandomSetting, xeno_alst), 0x22);
-        assert_eq!(offset_of!(StageRandomSetting, trail_castle), 0x24);
+        assert_eq!(size_of::<GlobalStageRandomSetting>(), 0x28);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, end), 0x0);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, punchout), 0x2);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, mario_maker), 0x4);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, balloonfight), 0xC);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, nintendogs), 0xD);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, animal_island), 0x11);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, animal_city), 0x13);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, sp_edit), 0x18);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, dolly_stadium), 0x19);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, pickel_world), 0x21);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, xeno_alst), 0x22);
+        assert_eq!(offset_of!(GlobalStageRandomSetting, trail_castle), 0x24);
     }
 }

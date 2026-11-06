@@ -22,7 +22,7 @@ pub struct GlobalStageParameter {
     pub ui_bgm_id: Hash40,
     _30: u8,
     _31: [u8; 0xF],
-    pub setting: StageSetting,
+    pub setting: GlobalStageSetting,
 }
 
 impl GlobalStageParameter {
@@ -34,10 +34,10 @@ impl GlobalStageParameter {
 
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct StageSetting {
-    pub ex: StageExSetting,
+pub struct GlobalStageSetting {
+    pub ex: GlobalStageExSetting,
     _30: [u8; 0x10],
-    pub random: StageRandomSetting,
+    pub random: GlobalStageRandomSetting,
     _68: [u8; 0x4],
     pub _6c: i32,
 }
@@ -61,9 +61,9 @@ mod tests {
         assert_eq!(offset_of!(GlobalStageParameter, _30), 0x30);
         assert_eq!(offset_of!(GlobalStageParameter, setting), 0x40);
 
-        assert_eq!(size_of::<StageSetting>(), 0x70);
-        assert_eq!(offset_of!(StageSetting, ex), 0x0);
-        assert_eq!(offset_of!(StageSetting, random), 0x40);
-        assert_eq!(offset_of!(StageSetting, _6c), 0x6C);
+        assert_eq!(size_of::<GlobalStageSetting>(), 0x70);
+        assert_eq!(offset_of!(GlobalStageSetting, ex), 0x0);
+        assert_eq!(offset_of!(GlobalStageSetting, random), 0x40);
+        assert_eq!(offset_of!(GlobalStageSetting, _6c), 0x6C);
     }
 }

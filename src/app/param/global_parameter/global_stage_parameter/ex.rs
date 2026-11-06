@@ -2,7 +2,7 @@ use crate::app::stage::{end, pickel_world, poke_kalos, trail_castle};
 
 #[derive(Debug, Clone, Copy, Default)]
 #[repr(C)]
-pub struct StageExSetting {
+pub struct GlobalStageExSetting {
     pub common_end: i8,
     pub animal_city: i8,
     pub animal_island: i8,
@@ -54,47 +54,47 @@ mod tests {
         use super::*;
         use core::mem::offset_of;
 
-        assert_eq!(size_of::<StageExSetting>(), 0x30);
-        assert_eq!(offset_of!(StageExSetting, common_end), 0x0);
-        assert_eq!(offset_of!(StageExSetting, animal_city), 0x1);
-        assert_eq!(offset_of!(StageExSetting, animal_island), 0x2);
-        assert_eq!(offset_of!(StageExSetting, animal_village), 0x3);
-        assert_eq!(offset_of!(StageExSetting, end), 0x4);
-        assert_eq!(offset_of!(StageExSetting, fe_siege), 0x7);
-        assert_eq!(offset_of!(StageExSetting, flatzonex), 0x8);
-        assert_eq!(offset_of!(StageExSetting, icarus_skyworld), 0x9);
-        assert_eq!(offset_of!(StageExSetting, icarus_uprising), 0xA);
-        assert_eq!(offset_of!(StageExSetting, kirby_gameboy), 0xB);
-        assert_eq!(offset_of!(StageExSetting, kirby_halberd), 0xC);
-        assert_eq!(offset_of!(StageExSetting, mario_castledx), 0xD);
-        assert_eq!(offset_of!(StageExSetting, mario_dolpic), 0xE);
-        assert_eq!(offset_of!(StageExSetting, mario_maker), 0xF);
-        assert_eq!(offset_of!(StageExSetting, mario_paper), 0x10);
-        assert_eq!(offset_of!(StageExSetting, mario_uworld), 0x11);
-        assert_eq!(offset_of!(StageExSetting, mg_shadowmoses), 0x12);
-        assert_eq!(offset_of!(StageExSetting, pikmin_planet), 0x13);
-        assert_eq!(offset_of!(StageExSetting, poke_stadium), 0x14);
-        assert_eq!(offset_of!(StageExSetting, poke_stadium2), 0x15);
-        assert_eq!(offset_of!(StageExSetting, poke_kalos), 0x16);
-        assert_eq!(offset_of!(StageExSetting, poke_tengam), 0x18);
-        assert_eq!(offset_of!(StageExSetting, poke_unova), 0x19);
-        assert_eq!(offset_of!(StageExSetting, rock_wily), 0x1A);
-        assert_eq!(offset_of!(StageExSetting, wario_gamer), 0x1B);
-        assert_eq!(offset_of!(StageExSetting, wario_madein), 0x1C);
-        assert_eq!(offset_of!(StageExSetting, wufuisland), 0x1D);
-        assert_eq!(offset_of!(StageExSetting, xeno_gaur), 0x1E);
-        assert_eq!(offset_of!(StageExSetting, yoshi_island), 0x1F);
-        assert_eq!(offset_of!(StageExSetting, zelda_hyrule), 0x20);
-        assert_eq!(offset_of!(StageExSetting, bossstage_final2), 0x21);
-        assert_eq!(offset_of!(StageExSetting, jack_mementoes), 0x22);
-        assert_eq!(offset_of!(StageExSetting, brave_altar), 0x23);
-        assert_eq!(offset_of!(StageExSetting, buddy_spiral), 0x24);
-        assert_eq!(offset_of!(StageExSetting, dolly_stadium), 0x25);
-        assert_eq!(offset_of!(StageExSetting, fe_shrine), 0x26);
-        assert_eq!(offset_of!(StageExSetting, tantan_spring), 0x27);
-        assert_eq!(offset_of!(StageExSetting, poke_tower), 0x28);
-        assert_eq!(offset_of!(StageExSetting, pickel_world), 0x29);
-        assert_eq!(offset_of!(StageExSetting, demon_dojo), 0x2D);
-        assert_eq!(offset_of!(StageExSetting, trail_castle), 0x2E);
+        assert_eq!(size_of::<GlobalStageExSetting>(), 0x30);
+        assert_eq!(offset_of!(GlobalStageExSetting, common_end), 0x0);
+        assert_eq!(offset_of!(GlobalStageExSetting, animal_city), 0x1);
+        assert_eq!(offset_of!(GlobalStageExSetting, animal_island), 0x2);
+        assert_eq!(offset_of!(GlobalStageExSetting, animal_village), 0x3);
+        assert_eq!(offset_of!(GlobalStageExSetting, end), 0x4);
+        assert_eq!(offset_of!(GlobalStageExSetting, fe_siege), 0x7);
+        assert_eq!(offset_of!(GlobalStageExSetting, flatzonex), 0x8);
+        assert_eq!(offset_of!(GlobalStageExSetting, icarus_skyworld), 0x9);
+        assert_eq!(offset_of!(GlobalStageExSetting, icarus_uprising), 0xA);
+        assert_eq!(offset_of!(GlobalStageExSetting, kirby_gameboy), 0xB);
+        assert_eq!(offset_of!(GlobalStageExSetting, kirby_halberd), 0xC);
+        assert_eq!(offset_of!(GlobalStageExSetting, mario_castledx), 0xD);
+        assert_eq!(offset_of!(GlobalStageExSetting, mario_dolpic), 0xE);
+        assert_eq!(offset_of!(GlobalStageExSetting, mario_maker), 0xF);
+        assert_eq!(offset_of!(GlobalStageExSetting, mario_paper), 0x10);
+        assert_eq!(offset_of!(GlobalStageExSetting, mario_uworld), 0x11);
+        assert_eq!(offset_of!(GlobalStageExSetting, mg_shadowmoses), 0x12);
+        assert_eq!(offset_of!(GlobalStageExSetting, pikmin_planet), 0x13);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_stadium), 0x14);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_stadium2), 0x15);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_kalos), 0x16);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_tengam), 0x18);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_unova), 0x19);
+        assert_eq!(offset_of!(GlobalStageExSetting, rock_wily), 0x1A);
+        assert_eq!(offset_of!(GlobalStageExSetting, wario_gamer), 0x1B);
+        assert_eq!(offset_of!(GlobalStageExSetting, wario_madein), 0x1C);
+        assert_eq!(offset_of!(GlobalStageExSetting, wufuisland), 0x1D);
+        assert_eq!(offset_of!(GlobalStageExSetting, xeno_gaur), 0x1E);
+        assert_eq!(offset_of!(GlobalStageExSetting, yoshi_island), 0x1F);
+        assert_eq!(offset_of!(GlobalStageExSetting, zelda_hyrule), 0x20);
+        assert_eq!(offset_of!(GlobalStageExSetting, bossstage_final2), 0x21);
+        assert_eq!(offset_of!(GlobalStageExSetting, jack_mementoes), 0x22);
+        assert_eq!(offset_of!(GlobalStageExSetting, brave_altar), 0x23);
+        assert_eq!(offset_of!(GlobalStageExSetting, buddy_spiral), 0x24);
+        assert_eq!(offset_of!(GlobalStageExSetting, dolly_stadium), 0x25);
+        assert_eq!(offset_of!(GlobalStageExSetting, fe_shrine), 0x26);
+        assert_eq!(offset_of!(GlobalStageExSetting, tantan_spring), 0x27);
+        assert_eq!(offset_of!(GlobalStageExSetting, poke_tower), 0x28);
+        assert_eq!(offset_of!(GlobalStageExSetting, pickel_world), 0x29);
+        assert_eq!(offset_of!(GlobalStageExSetting, demon_dojo), 0x2D);
+        assert_eq!(offset_of!(GlobalStageExSetting, trail_castle), 0x2E);
     }
 }
