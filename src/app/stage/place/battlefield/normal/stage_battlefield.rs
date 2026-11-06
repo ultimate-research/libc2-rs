@@ -1,4 +1,7 @@
-use crate::{app::StageBattleBase, cpp};
+use crate::{
+    app::{StageBattleBase, StageColorCorrectionController},
+    cpp,
+};
 
 use super::StageData;
 
@@ -8,7 +11,7 @@ pub struct StageBattleField {
     pub base: StageBattleBase,
     pub stage_data: StageData,
     pub stage_data_work: *const StageData,
-    pub color_correction_controller: cpp::UniquePtr<()>,
+    pub color_correction_controller: cpp::UniquePtr<StageColorCorrectionController>,
 }
 
 #[cfg(test)]
