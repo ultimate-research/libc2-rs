@@ -203,7 +203,7 @@ mod tests {
     #[test]
     fn assert_mem() {
         use super::*;
-        use std::mem::offset_of;
+        use core::mem::offset_of;
 
         assert_eq!(size_of::<StageData>(), 0xE0);
         assert_eq!(offset_of!(StageData, base), 0x0);
