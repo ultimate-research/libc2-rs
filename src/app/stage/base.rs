@@ -53,11 +53,12 @@ pub struct StageBase {
 
 #[cfg(feature = "impl")]
 impl StageBase {
-    pub fn create(&mut self, create_param: &StageCreateParam) {
-        unsafe {
-            #[skyline::from_offset(0x25D3210)]
-            fn inner(this: *mut StageBase, create_param: *const StageCreateParam);
+    /// Creates a new `StageBase` in place.
+    fn create(&mut self, create_param: &StageCreateParam) {
+        #[skyline::from_offset(0x25D3210)]
+        fn inner(this: *mut StageBase, create_param: &StageCreateParam);
 
+        unsafe {
             inner(self, create_param);
         }
     }
@@ -527,6 +528,7 @@ impl ops::DerefMut for StageBaseStorage {
     }
 }
 
+/// The set of parameters corresponding to creating a new [`StageBase`].
 #[repr(C)]
 pub struct StageCreateParam {
     pub global_stage_parameter: GlobalStageParameter,
