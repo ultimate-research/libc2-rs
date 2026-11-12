@@ -503,9 +503,13 @@ pub struct StageBattleBase {
     pub kumite_item_base_controller: cpp::UniquePtr<()>,
 }
 
+/// A numeric identifier for an alternative form of a stage.
 #[repr(C)]
 pub enum StageFormType {
+    /// Battlefield Form
     Battle,
+
+    /// Ω Form
     End,
 }
 

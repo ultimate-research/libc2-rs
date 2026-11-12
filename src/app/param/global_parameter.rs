@@ -19,7 +19,7 @@ pub struct GlobalParameter {
 
 #[cfg(feature = "impl")]
 impl GlobalParameter {
-    /// Returns a reference to the current instance of `GlobalParameter`.
+    /// Returns a reference to the global instance of `GlobalParameter`.
     pub fn instance() -> &'static Self {
         unsafe {
             &*getRegionAddress(Region::Text)

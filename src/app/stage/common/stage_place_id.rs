@@ -441,6 +441,7 @@ impl fmt::Display for StagePlaceID {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     #[test]
     fn assert_mem() {
