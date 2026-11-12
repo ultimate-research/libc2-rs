@@ -518,13 +518,15 @@ impl ops::Deref for StageBaseStorage {
     type Target = StageBase;
 
     fn deref(&self) -> &Self::Target {
-        unsafe { mem::transmute::<&[u8; 0x731], &StageBase>(self.inner.assume_init_ref()) }
+        unsafe { mem::transmute::<&[u8; 0x731], &Self::Target>(self.inner.assume_init_ref()) }
     }
 }
 
 impl ops::DerefMut for StageBaseStorage {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        unsafe { mem::transmute::<&mut [u8; 0x731], &mut StageBase>(self.inner.assume_init_mut()) }
+        unsafe {
+            mem::transmute::<&mut [u8; 0x731], &mut Self::Target>(self.inner.assume_init_mut())
+        }
     }
 }
 

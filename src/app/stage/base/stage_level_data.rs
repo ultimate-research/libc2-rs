@@ -1,6 +1,10 @@
 use core::slice;
 
-use crate::{app::StageDynamicObject, cpp, phx::Hash40};
+use crate::{
+    app::{StageDynamicObject, StageInstancedObject},
+    cpp,
+    phx::Hash40,
+};
 
 #[repr(C)]
 pub struct StageLevelData {
@@ -60,7 +64,20 @@ impl StageDynamicObjectCollection {
 
 #[repr(C)]
 pub struct StageInstancedObjectCollection {
-    inner: cpp::Vector<cpp::UniquePtr<StageDynamicObject>>,
+    inner: cpp::Vector<cpp::UniquePtr<StageInstancedObject>>,
+}
+
+impl StageInstancedObjectCollection {
+    /// Returns an iterator visiting all objects in the underlying collection.
+    pub fn iter(&self) -> slice::Iter<'_, cpp::UniquePtr<StageInstancedObject>> {
+        self.inner.iter()
+    }
+
+    /// Returns an iterator visiting all objects in the underlying collection,
+    /// with mutable references to the values.
+    pub fn iter_mut(&mut self) -> slice::IterMut<'_, cpp::UniquePtr<StageInstancedObject>> {
+        self.inner.iter_mut()
+    }
 }
 
 #[cfg(test)]

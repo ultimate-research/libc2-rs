@@ -1,3 +1,8 @@
+use core::{
+    mem::{self, MaybeUninit},
+    ops,
+};
+
 use crate::{
     cpp,
     lib::FixedBaseString64,
@@ -59,6 +64,34 @@ struct StageDynamicObjectVtable {
     destroy: extern "C" fn(*mut StageDynamicObject),
     delete: extern "C" fn(*mut StageDynamicObject),
 }
+
+#[repr(C)]
+pub struct StageDynamicObjectStorage {
+    inner: MaybeUninit<[u8; 0x138]>,
+}
+
+impl ops::Deref for StageDynamicObjectStorage {
+    type Target = StageDynamicObject;
+
+    fn deref(&self) -> &Self::Target {
+        unsafe { mem::transmute::<&[u8; 0x138], &Self::Target>(self.inner.assume_init_ref()) }
+    }
+}
+
+impl ops::DerefMut for StageDynamicObjectStorage {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe {
+            mem::transmute::<&mut [u8; 0x138], &mut Self::Target>(self.inner.assume_init_mut())
+        }
+    }
+}
+
+#[repr(C)]
+pub struct StageInstancedObject {
+    pub base: StageDynamicObjectStorage,
+    pub instance_id: u32,
+    pub instance_offset: Vector3f,
+}
 /*
 #[repr(C)]
 pub struct StageDamageShape {
@@ -89,6 +122,11 @@ mod tests {
         assert_eq!(offset_of!(StageDynamicObject, damagee_shape_collection), 0x120);
         assert_eq!(offset_of!(StageDynamicObject, damager_shape_collection), 0x128);
         assert_eq!(offset_of!(StageDynamicObject, item_popup_region_collection), 0x130);
+
+        assert_eq!(size_of::<StageInstancedObject>(), 0x150);
+        assert_eq!(offset_of!(StageInstancedObject, base), 0x0);
+        assert_eq!(offset_of!(StageInstancedObject, instance_id), 0x138);
+        assert_eq!(offset_of!(StageInstancedObject, instance_offset), 0x140);
 
         // assert_eq!(size_of::<StageDamageShape>, 0x40);
         // assert_eq!(offset_of!(StageDamageShape, shape), 0x0);
