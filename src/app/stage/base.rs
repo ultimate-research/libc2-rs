@@ -108,13 +108,13 @@ struct StageBaseVtable {
     /// Returns the entry position for a fighter at the given index.
     pub get_fighter_start_position: extern "C" fn(*const StageBase, i32) -> Vector3f,
 
-    // TODO. Unused?
+    // TODO: Unused?
     pub _30: extern "C" fn(*const StageBase) -> Vector3f,
 
-    // TODO. Unused?
+    // TODO: Unused?
     pub _38: extern "C" fn(*const StageBase) -> i32,
 
-    // TODO. Unused?
+    // TODO: Unused?
     pub _40: extern "C" fn(*const StageBase) -> Vector3f,
 
     /// Returns the number of recovery platform target positions.
@@ -220,10 +220,10 @@ struct StageBaseVtable {
     /// Returns a pointer to the working blast zone.
     pub get_dead_range: extern "C" fn(*const StageBase) -> *const Rect,
 
-    // TODO. Related to the camera. Executes once per frame during a performance effect. `Tomodachi` and `BalloonFight` both return `true`.
+    // TODO: Related to the camera. Executes once per frame during a performance effect. `Tomodachi` and `BalloonFight` both return `true`.
     pub _150: extern "C" fn(*const StageBase) -> bool,
 
-    // TODO. Related to the camera. Executes once per frame. Always returns `false`.
+    // TODO: Related to the camera. Executes once per frame. Always returns `false`.
     pub _158: extern "C" fn(*const StageBase) -> bool,
 
     /// Returns the minimum distance from the pivot the camera can zoom in toward using camera controls.
@@ -235,7 +235,7 @@ struct StageBaseVtable {
     /// Returns the minimum distance from the pivot the camera can zoom in toward in Training.
     pub get_training_camera_min_distance: extern "C" fn(*const StageBase) -> f32,
 
-    // TODO. Executes upon the first frame of battle entry.
+    // TODO: Executes upon the first frame of battle entry.
     pub _178: extern "C" fn(*const StageBase) -> (u64, f32),
 
     /// Returns `true` if screen KOs can occur.
@@ -259,7 +259,7 @@ struct StageBaseVtable {
     // TODO
     pub _1b0: extern "C" fn(*mut StageBase),
 
-    // TODO. Related to Smash Taunts.
+    // TODO: Related to Smash Taunts.
     pub _1b8: extern "C" fn(*const StageBase) -> bool,
 
     /// Returns `true` if a Smash Taunt can be activated at this time.
@@ -267,19 +267,19 @@ struct StageBaseVtable {
     /// If this function returns `false`, a Smash Taunt can still be activated at a later time.
     pub is_start_appeal_timing: extern "C" fn(*const StageBase) -> bool,
 
-    // TODO. Executes after a Smash Taunt has successfully been performed.
+    // TODO: Executes after a Smash Taunt has successfully been performed.
     pub _1c8: extern "C" fn(*mut StageBase) -> bool,
 
     /// Assigns the `FighterKind` of the Smash Taunt's subject fighter.
     pub set_appeal_subject_fighter_kind: extern "C" fn(*mut StageBase, i32),
 
-    // TODO. Executes to force stop the Smash Taunt?
+    // TODO: Executes to force stop the Smash Taunt?
     pub _1d8: extern "C" fn(*const StageBase),
 
-    // TODO. Related to Smash Taunts.
+    // TODO: Related to Smash Taunts.
     pub _1e0: extern "C" fn(*const StageBase),
 
-    // TODO. Related to Smash Taunts. Only called for `MG_Shadowmoses` and `Icarus_Angeland`.
+    // TODO: Related to Smash Taunts. Only called for `MG_Shadowmoses` and `Icarus_Angeland`.
     pub _1e8: extern "C" fn(*mut StageBase, u32),
 
     // TODO
@@ -342,10 +342,10 @@ struct StageBaseVtable {
     // TODO
     pub _280: extern "C" fn(*const StageBase) -> Vector3f,
 
-    // TODO. Related to stage scrolling.
+    // TODO: Related to stage scrolling.
     pub _288: extern "C" fn(*const StageBase) -> f32,
 
-    // TODO. Executes once per frame when mining the ground with Steve's neutral special move.
+    // TODO: Executes once per frame when mining the ground with Steve's neutral special move.
     pub _290: extern "C" fn(*const StageBase, i32, i32, i32) -> f32,
 
     // TODO
@@ -415,16 +415,16 @@ struct StageBaseVtable {
     // TODO
     pub _4d8: extern "C" fn(*const StageBase) -> *mut c_void,
 
-    // TODO. Related to setup.
+    // TODO: Related to setup.
     pub _4e0: extern "C" fn(*mut StageBase),
 
-    // TODO. Related to setup.
+    // TODO: Related to setup.
     pub _4e8: extern "C" fn(*mut StageBase),
 
-    // TODO. Related to setup.
+    // TODO: Related to setup.
     pub _4f0: extern "C" fn(*mut StageBase),
 
-    // TODO. Related to setup.
+    // TODO: Related to setup.
     pub _4f8: extern "C" fn(*mut StageBase),
 
     /// Updates the state of the `StageBase` before most other battle logic processing occurs.
@@ -436,7 +436,7 @@ struct StageBaseVtable {
     // TODO
     pub update_fix_position: extern "C" fn(*mut StageBase, f32),
 
-    // TODO. Related to lighting and color correction.
+    // TODO: Related to lighting and color correction.
     pub _518: extern "C" fn(*mut StageBase),
 
     _520: [usize; 1], // __cxa_deleted_virtual
@@ -772,7 +772,7 @@ pub struct StageFinalNessParam {
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct StageFinalKoopaParam {
-    // TODO. Assumes the value of `Hash40(0x286F4D767B)`.
+    // TODO: Assumes the value of `Hash40(0x286F4D767B)` from the STPRM file.
     pub _0: f32,
 
     /// The uniform scale of Giga Bowser.
@@ -847,10 +847,10 @@ pub enum StageVisionMessageKind {
     /// "GAME!"
     GameSet,
 
-    // TODO. Checked for in `Poke_Stadium2`.
+    // TODO: Checked in `Poke_Stadium2`.
     Unk13,
 
-    // TODO. Checked for in `Poke_Stadium2`.
+    // TODO: Checked in `Poke_Stadium2`.
     Unk14,
 
     /// "Player 1 Defeated"
