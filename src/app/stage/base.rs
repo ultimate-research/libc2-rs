@@ -382,17 +382,17 @@ struct StageBaseVtable {
     // TODO
     pub _480: extern "C" fn(*const StageBase) -> Rect,
 
-    // TODO
-    pub _488: extern "C" fn(*const StageBase) -> bool,
+    /// Returns `true` if a Stage Morph can occur.
+    pub is_valid_transition: extern "C" fn(*const StageBase) -> bool,
 
-    // TODO
-    pub _490: extern "C" fn(*const StageBase) -> bool,
+    /// Returns `true` if a specialized time scale should be applied during the prebattle countdown.
+    pub is_change_start_motion_rate: extern "C" fn(*const StageBase) -> bool,
 
-    // TODO
-    pub _498: extern "C" fn(*const StageBase) -> f32,
+    /// Returns the specialized time scale for application during the prebattle countdown.
+    pub get_start_motion_rate: extern "C" fn(*const StageBase) -> f32,
 
-    // TODO
-    pub _4a0: extern "C" fn(*const StageBase) -> bool,
+    /// Returns `true` if an Easy Final Smash can be granted.
+    pub is_discretion_final_enabled: extern "C" fn(*const StageBase) -> bool,
 
     // TODO
     pub _4a8: extern "C" fn(*const StageBase, *mut c_void) -> bool,
@@ -415,36 +415,36 @@ struct StageBaseVtable {
     // TODO
     pub _4d8: extern "C" fn(*const StageBase) -> *mut c_void,
 
-    // TODO
+    // TODO. Related to setup.
     pub _4e0: extern "C" fn(*mut StageBase),
 
-    // TODO
+    // TODO. Related to setup.
     pub _4e8: extern "C" fn(*mut StageBase),
 
-    // TODO
+    // TODO. Related to setup.
     pub _4f0: extern "C" fn(*mut StageBase),
 
-    // TODO
+    // TODO. Related to setup.
     pub _4f8: extern "C" fn(*mut StageBase),
 
-    // TODO
+    /// Updates the state of the `StageBase` before most other battle logic processing occurs.
     pub pre_update: extern "C" fn(*mut StageBase, f32),
 
-    // TODO
+    /// Updates the state of the `StageBase` after most other battle logic processing occurs.
     pub post_update: extern "C" fn(*mut StageBase, f32),
 
     // TODO
-    pub _510: extern "C" fn(*mut StageBase, f32),
+    pub update_fix_position: extern "C" fn(*mut StageBase, f32),
 
-    // TODO
+    // TODO. Related to lighting and color correction.
     pub _518: extern "C" fn(*mut StageBase),
 
     _520: [usize; 1], // __cxa_deleted_virtual
 
-    // TODO
+    /// Updates the state of each registered stage hazard before most other battle logic processing occurs.
     pub pre_update_gimmick: extern "C" fn(*mut StageBase, f32),
 
-    // TODO
+    /// Updates the state of each registered stage hazard after most other battle logic processing occurs.
     pub post_update_gimmick: extern "C" fn(*mut StageBase, f32),
 
     _538: usize,
@@ -473,7 +473,7 @@ struct StageBaseVtable {
     // TODO
     pub _5a8: extern "C" fn(*mut StageBase, i32),
 
-    /// Executes upon each frame of the pre-match countdown.
+    /// Executes upon each frame of the prebattle countdown.
     pub notify_event_info_ready: extern "C" fn(*mut StageBase, f32),
 
     /// Executes upon the first frame of user input.
